@@ -1,0 +1,60 @@
+{{- if .Values.swarm.ingress.enabled -}}
+
+{{- $root := . -}}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "swarm.fullname" $root }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+{{ toYaml .Values.swarm.ingress.annotations | indent 4 }}
+{{- if $root.Values.swarm.ingress.tls.acmeEnabled }}
+    kubernetes.io/tls-acme: "true"
+{{- end }}
+spec:
+{{- if $root.Values.swarm.ingress.tls.acmeEnabled }}
+  tls:
+  - hosts:
+      - {{ template "swarm.fullname" $root }}-{{ $root.Release.Namespace }}.{{ $root.Values.swarm.ingress.domain }}
+    secretName: {{ template "swarm.fullname" $root }}-ingress-tls
+{{- end }}
+  rules:
+  - host: {{ template "swarm.fullname" $root }}-{{ $root.Release.Namespace }}.{{ $root.Values.swarm.ingress.domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "swarm.fullname" $root }}-internal
+          servicePort: 8500
+
+
+{{- range $i, $e := until (int $root.Values.swarm.replicaCount) }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "swarm.fullname" $root }}-{{ $i }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+{{ toYaml $root.Values.swarm.ingress.annotations | indent 4 }}
+{{- if $root.Values.swarm.ingress.tls.acmeEnabled }}
+    kubernetes.io/tls-acme: "true"
+{{- end }}
+spec:
+{{- if $root.Values.swarm.ingress.tls.acmeEnabled }}
+  tls:
+  - hosts:
+      - {{ template "swarm.fullname" $root }}-{{ $i }}-{{ $root.Release.Namespace }}.{{ $root.Values.swarm.ingress.domain }}
+    secretName: {{ template "swarm.fullname" $root }}-ingress-tls-{{ $i }}
+{{- end }}
+  rules:
+  - host: {{ template "swarm.fullname" $root }}-{{ $i }}-{{ $root.Release.Namespace }}.{{ $root.Values.swarm.ingress.domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "swarm.fullname" $root }}-internal-{{ $i }}
+          servicePort: 8500
+{{- end }}
+{{- end }}

@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "swarm.fullname" . }}-headless
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: swarm
+spec:
+  selector:
+    app: {{ template "swarm.name" . }}
+    release: {{ .Release.Name }}
+    component: swarm
+  clusterIP: None
+  ports:
+  - name: bzz-http
+    port: 8500

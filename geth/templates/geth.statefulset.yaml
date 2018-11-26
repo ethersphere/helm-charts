@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "geth.fullname" . }}
+  labels:
+    app: {{ template "geth.name" . }}
+    chart: {{ template "geth.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: geth
+spec:
+  serviceName: {{ template "geth.fullname" . }}-headless
+  replicas: {{ .Values.geth.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "geth.name" . }}
+      release: {{ .Release.Name }}
+      component: geth
+  template:
+    metadata:
+      labels:
+        app: {{ template "geth.name" . }}
+        release: {{ .Release.Name }}
+        component: geth
+    spec:
+      containers:
+      - name: geth
+        image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.geth.resources | indent 10 }}
+        command: ["geth"]
+        args:
+        - --verbosity={{ .Values.geth.config.verbosity }}
+        - --cache={{ .Values.geth.config.cache }}
+        {{- if .Values.geth.config.testnet }}
+        - --testnet
+        {{- end }}
+        - --rpc
+        - --rpcaddr=0.0.0.0
+        - --rpcport=8545
+        - --rpcapi={{ .Values.geth.config.rpcapi }}
+        - --rpccorsdomain={{ .Values.geth.config.rpccorsdomains }}
+        - --rpcvhosts={{ .Values.geth.config.rpcvhosts }}
+        {{- if .Values.geth.config.ws }}
+        - --ws
+        - --wsaddr=0.0.0.0
+        - --wsport=8546
+        - --wsapi={{ .Values.geth.config.wsapi }}
+        - --wsorigins={{ .Values.geth.config.wsorigins }}
+        {{- end }}
+        {{- if .Values.ethstats.enabled }}
+        - --ethstats=$(POD_NAME):$(ETHSTATS_SECRET)@$(ETHSTATS_SVC)
+        {{- end }}
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        {{- if .Values.ethstats.enabled }}
+        - name: ETHSTATS_SVC
+          value: {{ template "geth.fullname" . }}-ethstats.{{ .Release.Namespace }}
+        - name: ETHSTATS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "geth.fullname" . }}-ethstats
+              key: WS_SECRET
+        {{- end }}
+        ports:
+        - name: rpc
+          containerPort: 8545
+        {{- if .Values.geth.config.ws }}
+        - name: ws
+          containerPort: 8546
+        {{- end}}
+        - name: discovery-udp
+          containerPort: 30303
+          protocol: UDP
+        - name: discovery-tcp
+          containerPort: 30303
+        volumeMounts:
+        - name: data
+          mountPath: /root/.ethereum
+      volumes:
+{{- if not .Values.geth.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "geth.name" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+        component: geth
+    spec:
+      accessModes:
+        - {{ .Values.geth.persistence.accessMode | quote }}
+      resources:
+          requests:
+            storage: {{ .Values.geth.persistence.size | quote }}
+  {{- if .Values.geth.persistence.storageClass }}
+    {{- if (eq "-" .Values.geth.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.geth.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- with .Values.geth.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.geth.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.geth.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}

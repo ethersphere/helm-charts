@@ -1,0 +1,23 @@
+{{- if .Values.swarm.tracingEnabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "swarm.fullname" . }}-jaeger-query
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: jaeger
+spec:
+  type: {{ .Values.jaeger.service.query.type }}
+  selector:
+    app: {{ template "swarm.name" . }}
+    release: {{ .Release.Name }}
+    component: jaeger
+  ports:
+    - name: query-http
+      port: 80
+      protocol: TCP
+      targetPort: 16686
+{{- end }}

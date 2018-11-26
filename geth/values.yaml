@@ -1,0 +1,64 @@
+# Default values for geth.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+imagePullPolicy: IfNotPresent
+
+ethstats:
+  # When enabled it will deploy ethstats collection server
+  enabled: false
+  image:
+    repository: ethereumex/eth-stats-dashboard
+    tag: v0.0.1
+  webSocketSecret: my-secret-for-connecting-to-ethstats
+  service:
+    type: ClusterIP
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+geth:
+  image:
+    repository: ethereum/client-go
+    tag: v1.8.17
+  replicaCount: 1
+  service:
+    type: ClusterIP
+  config:
+    # Enable to use the Ropsten network: pre-configured proof-of-work test network
+    # Disable to use main network.
+    testnet: false
+    # Logging verbosity: 0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=detail (default: 3)
+    verbosity: "3"
+    # API's offered over the HTTP-RPC interface
+    rpcapi: eth,net,web3,txpool
+    # Comma separated list of domains from which to accept cross origin requests (browser enforced)
+    rpccorsdomains: "*"
+    # Comma separated list of virtual hostnames from which to accept requests (server enforced). Accepts '*' wildcard. (default: "localhost")
+    rpcvhosts: "*"
+    # Megabytes of memory allocated to internal caching (default: 1024)
+    cache: "1024"
+    # Enable the WS-RPC server
+    ws: false
+    # API's offered over the WS-RPC interface
+    wsapi: eth,net,web3,txpool
+    # Origins from which to accept websockets requests
+    wsorigins: "*"
+  persistence:
+    ## this enables PVC templates that will create one per pod
+    enabled: false
+    ## geth data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 20Gi
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

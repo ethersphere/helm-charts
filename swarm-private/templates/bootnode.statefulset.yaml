@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "swarm.fullname" . }}-bootnode
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: bootnode
+spec:
+  serviceName: {{ template "swarm.fullname" . }}-bootnode
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "swarm.name" . }}
+      release: {{ .Release.Name }}
+      component: bootnode
+  template:
+    metadata:
+      labels:
+        app: {{ template "swarm.name" . }}
+        release: {{ .Release.Name }}
+        component: bootnode
+    {{- if or (eq .Values.bootnode.image.tag "latest") (eq .Values.bootnode.image.tag "edge") }}
+      annotations:
+        # Note: 'latest' or 'edge' tag is beeing used, therefore we keep changing
+        # this annotation to force a redeployment of the pods within the StatefulSet
+        "release-timestamp": {{.Release.Time.Seconds | quote }}
+    {{- end }}
+    spec:
+      containers:
+      - name: bootnode
+        image: {{ .Values.bootnode.image.repository }}:{{ .Values.bootnode.image.tag }}
+        imagePullPolicy: {{ .Values.bootnode.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.bootnode.resources | indent 10 }}
+        command:
+        - sh
+        - -ac
+        - >
+          /bootnode
+          --nodekey=/keys/bootnode.key
+          --addr=:30301
+          --verbosity={{ .Values.bootnode.config.verbosity }}
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+        - name: network
+          containerPort: 30301
+        volumeMounts:
+        - name: keys
+          mountPath: /keys
+          readOnly: true
+      volumes:
+      - name: keys
+        secret:
+          secretName: {{ template "swarm.fullname" . }}-bootnode
+{{- with .Values.bootnode.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.bootnode.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.bootnode.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}

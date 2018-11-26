@@ -1,0 +1,9 @@
+dependencies:
+  - name: "influxdb"
+    version: 0.11.0
+    condition: swarm.metricsEnabled
+    repository: https://kubernetes-charts.storage.googleapis.com/
+  - name: "grafana"
+    version: 1.14.8
+    condition: swarm.metricsEnabled
+    repository: https://kubernetes-charts.storage.googleapis.com/

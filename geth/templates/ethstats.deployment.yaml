@@ -1,0 +1,54 @@
+{{- if .Values.ethstats.enabled }}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "geth.fullname" . }}-ethstats
+  labels:
+    app: {{ template "geth.name" . }}
+    chart: {{ template "geth.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: ethstats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "geth.name" . }}
+      release: {{ .Release.Name }}
+      component: ethstats
+  template:
+    metadata:
+      labels:
+        app: {{ template "geth.name" . }}
+        release: {{ .Release.Name }}
+        component: ethstats
+    spec:
+      containers:
+      - name: ethstats
+        image: {{ .Values.ethstats.image.repository }}:{{ .Values.ethstats.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.ethstats.resources | indent 10 }}
+        ports:
+        - name: http
+          containerPort: 3000
+        env:
+        - name: WS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "geth.fullname" . }}-ethstats
+              key: WS_SECRET
+{{- with .Values.ethstats.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.ethstats.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.ethstats.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+
+{{- end }}

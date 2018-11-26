@@ -1,0 +1,13 @@
+name: geth
+version: 0.0.1
+description: Run geth (go ethereum client)
+keywords:
+- ethereum
+home: https://geth.ethereum.org
+sources:
+- https://github.com/ethereum/go-ethereum
+maintainers:
+- name: skylenet
+  email: rafael@ethereum.org
+icon: https://geth.ethereum.org/static/images/ethereum.png
+appVersion: dev

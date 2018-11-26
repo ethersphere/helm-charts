@@ -1,0 +1,47 @@
+{{- if .Values.swarm.tracingEnabled }}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "swarm.fullname" . }}-jaeger
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: jaeger
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "swarm.name" . }}
+      release: {{ .Release.Name }}
+      component: jaeger
+  template:
+    metadata:
+      labels:
+        app: {{ template "swarm.name" . }}
+        release: {{ .Release.Name }}
+        component: jaeger
+    spec:
+      containers:
+      - name: jaeger
+        image: {{ .Values.jaeger.image.repository }}:{{ .Values.jaeger.image.tag }}
+        imagePullPolicy: {{ .Values.jaeger.imagePullPolicy }}
+        ports:
+          - containerPort: 6831
+            protocol: UDP
+          - containerPort: 16686
+            protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: "/"
+            port: 14269
+          initialDelaySeconds: 5
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+
+{{- end }}

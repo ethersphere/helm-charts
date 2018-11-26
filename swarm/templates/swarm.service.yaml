@@ -1,0 +1,73 @@
+{{- $root := . -}}
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "swarm.fullname" . }}-internal
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: swarm
+spec:
+  selector:
+    app: {{ template "swarm.name" . }}
+    release: {{ .Release.Name }}
+    component: swarm
+  type: ClusterIP
+  ports:
+  - name: http-interface
+    port: 8500
+
+{{- range $i, $e := until (int $root.Values.swarm.replicaCount) }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "swarm.fullname" $root }}-{{ $i }}
+  labels:
+    app: {{ template "swarm.name" $root }}
+    chart: {{ template "swarm.chart" $root }}
+    release: {{ $root.Release.Name }}
+    heritage: {{ $root.Release.Service }}
+    component: swarm
+    pod: {{ template "swarm.fullname" $root }}-{{ $i }}
+    type: external
+spec:
+  selector:
+    app: {{ template "swarm.name" $root }}
+    release: {{ $root.Release.Name }}
+    component: swarm
+    statefulset.kubernetes.io/pod-name: {{ template "swarm.fullname" $root }}-{{ $i }}
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+  - name: swarm-network
+    port: 30399
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "swarm.fullname" $root }}-internal-{{ $i }}
+  labels:
+    app: {{ template "swarm.name" $root }}
+    chart: {{ template "swarm.chart" $root }}
+    release: {{ $root.Release.Name }}
+    heritage: {{ $root.Release.Service }}
+    component: swarm
+    pod: {{ template "swarm.fullname" $root }}-{{ $i }}
+    type: internal
+spec:
+  selector:
+    app: {{ template "swarm.name" $root }}
+    release: {{ $root.Release.Name }}
+    component: swarm
+    statefulset.kubernetes.io/pod-name: {{ template "swarm.fullname" $root }}-{{ $i }}
+  type: ClusterIP
+  ports:
+  - name: http-interface
+    port: 8500
+
+{{- end }}

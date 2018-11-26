@@ -1,0 +1,177 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "swarm.fullname" . }}
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: swarm
+spec:
+  serviceName: {{ template "swarm.fullname" . }}-headless
+  replicas: {{ .Values.swarm.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "swarm.name" . }}
+      release: {{ .Release.Name }}
+      component: swarm
+  template:
+    metadata:
+      labels:
+        app: {{ template "swarm.name" . }}
+        release: {{ .Release.Name }}
+        component: swarm
+    {{- if or (eq .Values.swarm.image.tag "latest") (eq .Values.swarm.image.tag "edge") }}
+      annotations:
+        # Note: 'latest' or 'edge' tag is beeing used, therefore we keep changing
+        # this annotation to force a redeployment of the pods within the StatefulSet
+        "release-timestamp": {{.Release.Time.Seconds | quote }}
+    {{- end }}
+    spec:
+      serviceAccountName: {{ template "swarm.fullname" . }}
+      initContainers:
+      - name: nodeport-getter
+        image: lachlanevenson/k8s-kubectl:v1.10.9
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        command:  ["sh", "/scripts/populate-env.sh"]
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: envshare
+          mountPath: /env
+      containers:
+      - name: swarm
+        image: {{ .Values.swarm.image.repository }}:{{ .Values.swarm.image.tag }}
+        imagePullPolicy: {{ .Values.swarm.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.swarm.resources | indent 10 }}
+        command:
+        - sh
+        - -ac
+        - >
+          source /env/swarm.env;
+          /run.sh
+          --ens-api={{ .Values.swarm.config.ens_api }}
+          --port=$NODEPORT
+          --bzzport=8500
+          --store.size={{ .Values.swarm.config.storesize }}
+          --corsdomain=*
+          --httpaddr=0.0.0.0
+          --wsport=8546
+          --verbosity={{ .Values.swarm.config.verbosity }}
+          --maxpeers={{ .Values.swarm.config.maxpeers }}
+          --ipcpath=bzzd.ipc
+          {{- if .Values.swarm.config.debug }}
+          --debug
+          {{- end }}
+          --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
+          --nat=extip:$PUBLIC_IP
+          {{- if gt (len .Values.swarm.config.bootnodes) 0 }}
+          --bootnodes={{- range $i, $b := .Values.swarm.config.bootnodes }}{{if ne $i 0}},{{end}}{{ $b }}{{- end }}
+          {{- end }}
+          {{- if .Values.swarm.metricsEnabled }}
+          --metrics
+          --metrics.influxdb.export
+          --metrics.influxdb.endpoint=http://{{ template "swarm.influxdb.fullname" . }}:8086
+          --metrics.influxdb.username={{ .Values.influxdb.setDefaultUser.user.username }}
+          --metrics.influxdb.password={{ .Values.influxdb.setDefaultUser.user.password }}
+          --metrics.influxdb.database=metrics
+          --metrics.influxdb.host.tag=$(POD_NAME)
+          {{- end }}
+          {{- if .Values.swarm.tracingEnabled }}
+          --tracing
+          --tracing.endpoint={{ template "swarm.fullname" . }}-jaeger-agent:6831
+          --tracing.svc=$(POD_NAME)
+          {{- end }}
+          {{- if .Values.swarm.profilingEnabled }}
+          --pprof
+          --pprofaddr=0.0.0.0
+          --pprofport=6060
+          {{- end }}
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: PUBLIC_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "swarm.fullname" . }}
+              key: PASSWORD
+        ports:
+        - name: bzz-http
+          containerPort: 8500
+        - name: ws-rpc
+          containerPort: 8546
+        {{- if .Values.swarm.profilingEnabled }}
+        - name: pprof
+          containerPort: 6060
+        {{- end }}
+        volumeMounts:
+        - name: data
+          mountPath: /root/.ethereum
+        - name: envshare
+          mountPath: /env
+          readOnly: true
+      - name: proxy
+        image: alpine/socat:1.0.3
+        command: [ "sh", "-c", "source /env/swarm.env; exec socat tcp-listen:30399,reuseaddr,fork tcp:localhost:$NODEPORT"]
+        ports:
+        - name: swarm
+          containerPort: 30399
+        volumeMounts:
+        - name: envshare
+          mountPath: /env
+          readOnly: true
+      volumes:
+      - name: scripts
+        configMap:
+          name: {{ template "swarm.fullname" . }}-scripts
+      - name: envshare
+        emptyDir: {}
+{{- if not .Values.swarm.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "swarm.name" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+        - {{ .Values.swarm.persistence.accessMode | quote }}
+      resources:
+          requests:
+            storage: {{ .Values.swarm.persistence.size | quote }}
+  {{- if .Values.swarm.persistence.storageClass }}
+    {{- if (eq "-" .Values.swarm.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.swarm.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- with .Values.swarm.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.swarm.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.swarm.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}

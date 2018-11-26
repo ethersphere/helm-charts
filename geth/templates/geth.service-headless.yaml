@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "geth.fullname" . }}-headless
+  labels:
+    app: {{ template "geth.name" . }}
+    chart: {{ template "geth.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: geth
+spec:
+  selector:
+    app: {{ template "geth.name" . }}
+    release: {{ .Release.Name }}
+    component: geth
+  clusterIP: None
+  ports:
+  - name: rpc
+    port: 8545
+  {{- if .Values.geth.config.ws }}
+  - name: ws
+    port: 8546
+  {{- end }}
