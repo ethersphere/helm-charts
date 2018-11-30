@@ -39,7 +39,7 @@ spec:
         - sh
         - -ac
         - >
-          export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode.{{ .Release.Namespace }} | grep Address | awk '{ print $3 }') &&
+          export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode | grep Address | awk '{ print $3 }') &&
           /run.sh
           --ens-api={{ .Values.swarm.config.ens_api }}
           --port=30399
