@@ -1,0 +1,15 @@
+name: jaeger
+version: 0.0.1
+description: Jaeger all-in-one launches the Jaeger UI, collector, query, and agent, with an in memory storage component.
+keywords:
+- instrumentation
+- opentracing
+- jaeger
+home: https://www.jaegertracing.io
+sources:
+- https://github.com/jaegertracing/jaeger
+maintainers:
+- name: skylenet
+  email: rafael@ethereum.org
+icon: https://www.jaegertracing.io/img/jaeger-logo.png
+appVersion: dev
