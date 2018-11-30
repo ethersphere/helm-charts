@@ -1,18 +1,17 @@
-{{- if .Values.swarm.tracingEnabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "swarm.fullname" . }}-jaeger-agent
+  name: {{ template "jaeger.fullname" . }}-agent
   labels:
-    app: {{ template "swarm.name" . }}
-    chart: {{ template "swarm.chart" . }}
+    app: {{ template "jaeger.name" . }}
+    chart: {{ template "jaeger.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: jaeger
 spec:
   type: {{ .Values.jaeger.service.agent.type }}
   selector:
-    app: {{ template "swarm.name" . }}
+    app: {{ template "jaeger.name" . }}
     release: {{ .Release.Name }}
     component: jaeger
   ports:
@@ -20,4 +19,3 @@ spec:
       port: 6831
       protocol: UDP
       targetPort: 6831
-{{- end }}

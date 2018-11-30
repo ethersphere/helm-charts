@@ -67,7 +67,7 @@ spec:
       {{- end }}
       {{- if .Values.swarm.tracingEnabled }}
           --tracing
-          --tracing.endpoint={{ template "swarm.fullname" . }}-jaeger-agent:6831
+          --tracing.endpoint={{ template "swarm.jaegerAgent.fullname" . }}:6831
           --tracing.svc=$(POD_NAME)
       {{- end }}
       {{- if .Values.swarm.profilingEnabled }}

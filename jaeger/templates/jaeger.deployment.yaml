@@ -1,11 +1,10 @@
-{{- if .Values.swarm.tracingEnabled }}
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "swarm.fullname" . }}-jaeger
+  name: {{ template "jaeger.fullname" . }}
   labels:
-    app: {{ template "swarm.name" . }}
-    chart: {{ template "swarm.chart" . }}
+    app: {{ template "jaeger.name" . }}
+    chart: {{ template "jaeger.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     component: jaeger
@@ -15,13 +14,13 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ template "swarm.name" . }}
+      app: {{ template "jaeger.name" . }}
       release: {{ .Release.Name }}
       component: jaeger
   template:
     metadata:
       labels:
-        app: {{ template "swarm.name" . }}
+        app: {{ template "jaeger.name" . }}
         release: {{ .Release.Name }}
         component: jaeger
     spec:
@@ -43,5 +42,3 @@ spec:
       nodeSelector:
 {{ toYaml . | indent 8 }}
     {{- end }}
-
-{{- end }}
