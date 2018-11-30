@@ -7,3 +7,7 @@ dependencies:
     version: 1.14.8
     condition: swarm.metricsEnabled
     repository: https://kubernetes-charts.storage.googleapis.com/
+  - name: "jaeger"
+    version: 0.0.1
+    condition: swarm.tracingEnabled
+    repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/

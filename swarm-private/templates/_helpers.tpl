@@ -40,3 +40,7 @@ If release name contains chart name it will be used as a full name.
 {{- define "swarm.influxdb.fullname" -}}
 {{- printf "%s-%s" .Release.Name "influxdb" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "swarm.jaegerAgent.fullname" -}}
+{{- printf "%s-%s" .Release.Name "jaeger-agent" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
