@@ -92,6 +92,15 @@ swarm:
   tolerations: []
   affinity: {}
 
+  ingress:
+    enabled: true
+    tls:
+      acmeEnabled: false
+    domain: default.swarm-gateways.net
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 20m
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+
 jaeger:
   image:
     repository: jaegertracing/all-in-one
