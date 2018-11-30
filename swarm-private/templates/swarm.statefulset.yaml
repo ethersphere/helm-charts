@@ -39,7 +39,6 @@ spec:
         - sh
         - -ac
         - >
-          export BOOTNODE_IP=$(getent hosts {{ template "swarm.name" . }}-bootnode-0.{{ template "swarm.name" . }}-bootnode.{{ .Release.Namespace }}.svc.{{ .Values.k8sDNSDomain }} | awk '{ print $1 }') &&
           /run.sh
           --ens-api={{ .Values.swarm.config.ens_api }}
           --port=30399
@@ -52,7 +51,7 @@ spec:
           --maxpeers={{ .Values.swarm.config.maxpeers }}
           --ipcpath=bzzd.ipc
           --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
-          --bootnodes=enode://{{ .Values.bootnode.config.publicaddr }}@$BOOTNODE_IP:30301
+          --bootnodes=enode://{{ .Values.bootnode.config.publicaddr }}@$SWARM_PRIVATE_BOOTNODE_SERVICE_HOST:30301
       {{- if .Values.swarm.config.debug }}
           --debug
       {{- end }}

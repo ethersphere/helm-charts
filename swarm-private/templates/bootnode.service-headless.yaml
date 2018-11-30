@@ -13,7 +13,6 @@ spec:
     app: {{ template "swarm.name" . }}
     release: {{ .Release.Name }}
     component: bootnode
-  clusterIP: None
   ports:
   - name: network
     port: 30301
