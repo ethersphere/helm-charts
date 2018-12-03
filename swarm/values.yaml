@@ -517,10 +517,10 @@ grafana:
   ##
   dashboards:
     default:
-      lbstore:
-        url: https://raw.githubusercontent.com/ethereum/go-ethereum/master/swarm/grafana_dashboards/ldbstore.json
+      ldbstore:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/ldbstore.json
       swarm:
-        url: https://raw.githubusercontent.com/ethereum/go-ethereum/master/swarm/grafana_dashboards/swarm.json
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/swarm.json
 
   ## Reference to external ConfigMap per provider. Use provider name as key and ConfiMap name as value.
   ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
