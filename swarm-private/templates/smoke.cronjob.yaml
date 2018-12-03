@@ -27,6 +27,6 @@ spec:
             - --filesize={{ .Values.smoke.size }}
             - --verbosity=5
             - c
-          restartPolicy: OnFailure
+          restartPolicy: Never
 
 {{- end }}
