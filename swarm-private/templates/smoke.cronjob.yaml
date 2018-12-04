@@ -16,7 +16,7 @@ spec:
         spec:
           containers:
           - name: smoke
-            image: ethdevops/swarm-smoke
+            image: ethdevops/swarm-smoke:latest
             imagePullPolicy: Always
             args:
             - --cluster-endpoint={{ $root.Release.Namespace }}
@@ -26,6 +26,12 @@ spec:
             - --cluster-scheme=http
             - --filesize={{ .Values.smoke.size }}
             - --verbosity=5
+            - --metrics
+            - --metrics.influxdb.endpoint=http://{{ template "swarm.influxdb.fullname" . }}:8086
+            - --metrics.influxdb.username={{ .Values.influxdb.setDefaultUser.user.username }}
+            - --metrics.influxdb.password={{ .Values.influxdb.setDefaultUser.user.password }}
+            - --metrics.influxdb.database=metrics
+            - --metrics.influxdb.host.tag=$(POD_NAME)
             - c
           restartPolicy: Never
 
