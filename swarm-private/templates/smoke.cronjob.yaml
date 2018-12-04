@@ -1,0 +1,32 @@
+{{- if .Values.smoke.enabled -}}
+
+{{- $root := . -}}
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "swarm.fullname" $root }}-smoke
+  labels:
+    app: {{ template "swarm.name" $root }}
+spec:
+  schedule: "{{ $root.Values.smoke.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: smoke
+            image: ethdevops/swarm-smoke
+            imagePullPolicy: Always
+            args:
+            - --cluster-endpoint={{ $root.Release.Namespace }}
+            - --app={{ template "swarm.fullname" $root }}
+            - --cluster-from=0
+            - --cluster-to={{ $root.Values.swarm.replicaCount }}
+            - --cluster-scheme=http
+            - --filesize={{ .Values.smoke.size }}
+            - --verbosity=5
+            - c
+          restartPolicy: Never
+
+{{- end }}
