@@ -16,9 +16,7 @@ spec:
         spec:
           containers:
           - name: smoke
-            image:
-              repository: ethdevops/swarm-smoke
-              tag: latest
+            image: ethdevops/swarm-smoke:latest
             imagePullPolicy: Always
             args:
             - --cluster-endpoint={{ $root.Release.Namespace }}
