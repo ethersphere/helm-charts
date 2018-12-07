@@ -8,23 +8,36 @@ metadata:
   name: {{ template "swarm.fullname" $root }}-smoke
   labels:
     app: {{ template "swarm.name" $root }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   schedule: "{{ $root.Values.smoke.schedule }}"
+  successfulJobsHistoryLimit: {{ $root.Values.smoke.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ $root.Values.smoke.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ $root.Values.smoke.concurrencyPolicy | quote }}
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: smoke
-            image: ethdevops/swarm-smoke:latest
-            imagePullPolicy: Always
+            image: {{ .Values.smoke.image.repository }}:{{ .Values.smoke.image.tag }}
+            imagePullPolicy: {{ .Values.smoke.imagePullPolicy | quote }}
+            resources:
+{{ toYaml .Values.swarm.resources | indent 14 }}
+            env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             args:
             - --cluster-endpoint={{ $root.Release.Namespace }}
             - --app={{ template "swarm.fullname" $root }}
             - --cluster-from=0
             - --cluster-to={{ $root.Values.swarm.replicaCount }}
             - --cluster-scheme=http
-            - --filesize={{ .Values.smoke.size }}
+            - --filesize={{ .Values.smoke.config.filesize }}
             - --verbosity=5
             - --metrics
             - --metrics.influxdb.endpoint=http://{{ template "swarm.influxdb.fullname" . }}:8086

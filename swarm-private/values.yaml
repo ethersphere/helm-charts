@@ -27,9 +27,33 @@ bootnode:
   affinity: {}
 
 smoke:
+  # Deploy a CronJob that runs smoke tests if enabled
   enabled: false
+  # Image configuration
+  image:
+    repository: ethdevops/swarm-smoke
+    tag: latest
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  imagePullPolicy: Always
+  # Schedule is a cron format string that defines when a job is to be created and executed.
+  # https://en.wikipedia.org/wiki/Cron
+  # The default is every 5 minutes
   schedule: "*/5 * * * *"
-  size: 110
+  # concurrencyPolicy can be "Allow", "Forbid" or "Replace"
+  # https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy
+  concurrencyPolicy: Forbid
+  # How many successfull jobs we should keep
+  successfulJobsHistoryLimit: 3
+  # How many failed jobs we should keep
+  failedJobsHistoryLimit: 3
+  config:
+    filesize: 110 # file size for generated random file in KB
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources: {}
 
 swarm:
   # Metrics: If enabled it will deploy a InfluxDB + Grafana stack.
