@@ -38,6 +38,8 @@ spec:
             - --cluster-to={{ $root.Values.swarm.replicaCount }}
             - --cluster-scheme=http
             - --filesize={{ .Values.smoke.config.filesize }}
+            - --single
+            - --sync-delay={{ .Values.smoke.config.syncdelay }}
             - --verbosity=5
             - --metrics
             - --metrics.influxdb.endpoint=http://{{ template "swarm.influxdb.fullname" . }}:8086

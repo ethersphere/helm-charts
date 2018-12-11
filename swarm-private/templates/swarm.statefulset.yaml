@@ -40,6 +40,7 @@ spec:
         - -ac
         - >
           export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode | grep Address | awk '{ print $3 }') &&
+          export LOCAL_IP=$(wget http://169.254.169.254/latest/meta-data/local-ipv4 -q -O -) &&
           /run.sh
           --ens-api={{ .Values.swarm.config.ens_api }}
           --port=30399
@@ -48,6 +49,7 @@ spec:
           --corsdomain=*
           --httpaddr=0.0.0.0
           --wsport=8546
+          --nat=extip:$LOCAL_IP
           --verbosity={{ .Values.swarm.config.verbosity }}
           --maxpeers={{ .Values.swarm.config.maxpeers }}
           --ipcpath=bzzd.ipc
