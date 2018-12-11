@@ -52,7 +52,6 @@ smoke:
   config:
     filesize: 110 # file size for generated random file in KB
     syncdelay: 5
-    single: false
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}

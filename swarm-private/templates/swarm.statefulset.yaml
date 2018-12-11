@@ -49,7 +49,6 @@ spec:
           --corsdomain=*
           --httpaddr=0.0.0.0
           --wsport=8546
-          --vmodule="p2p=5"
           --nat=extip:$LOCAL_IP
           --verbosity={{ .Values.swarm.config.verbosity }}
           --maxpeers={{ .Values.swarm.config.maxpeers }}

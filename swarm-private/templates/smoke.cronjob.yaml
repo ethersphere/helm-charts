@@ -38,7 +38,6 @@ spec:
             - --cluster-to={{ $root.Values.swarm.replicaCount }}
             - --cluster-scheme=http
             - --filesize={{ .Values.smoke.config.filesize }}
-            - --filesize={{ .Values.smoke.config.filesize }}
             - --single
             - --sync-delay={{ .Values.smoke.config.syncdelay }}
             - --verbosity=5
@@ -47,7 +46,7 @@ spec:
             - --metrics.influxdb.username={{ .Values.influxdb.setDefaultUser.user.username }}
             - --metrics.influxdb.password={{ .Values.influxdb.setDefaultUser.user.password }}
             - --metrics.influxdb.database=metrics
-            - --metrics.influxdb.host.tag=single
+            - --metrics.influxdb.host.tag=$(POD_NAME)
             - c
           restartPolicy: Never
 
