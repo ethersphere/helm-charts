@@ -26,7 +26,7 @@ spec:
 {{ toYaml .Values.smoke.resources | indent 14 }}
             args:
             - --cluster-endpoint={{ $root.Release.Namespace }}
-            - --app={{ template "smoke.fullname" $root }}
+            - --app={{ .Values.smoke.config.target }}
             - --cluster-from=0
             - --cluster-to={{ .Values.smoke.config.swarmReplicas }}
             - --cluster-scheme=http

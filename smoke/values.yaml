@@ -24,6 +24,7 @@ smoke:
   # How many failed jobs we should keep
   failedJobsHistoryLimit: 3
   config:
+    target: "swarm-private" # target application name (generally swarm or swarm-private)
     filesize: 110 # file size for generated random file in KB
     syncdelay: 5
     swarmReplicas: 50
