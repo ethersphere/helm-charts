@@ -1,14 +1,12 @@
-{{- if .Values.smoke.enabled -}}
-
 {{- $root := . -}}
 
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ template "swarm.fullname" $root }}-smoke
+  name: {{ template "smoke.fullname" $root }}-smoke
   labels:
-    app: {{ template "swarm.name" $root }}
-    chart: {{ template "swarm.chart" . }}
+    app: {{ template "smoke.name" $root }}
+    chart: {{ template "smoke.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -25,29 +23,22 @@ spec:
             image: {{ .Values.smoke.image.repository }}:{{ .Values.smoke.image.tag }}
             imagePullPolicy: {{ .Values.smoke.imagePullPolicy | quote }}
             resources:
-{{ toYaml .Values.swarm.resources | indent 14 }}
-            env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
+{{ toYaml .Values.smoke.resources | indent 14 }}
             args:
             - --cluster-endpoint={{ $root.Release.Namespace }}
-            - --app={{ template "swarm.fullname" $root }}
+            - --app={{ .Values.smoke.config.target }}
             - --cluster-from=0
-            - --cluster-to={{ $root.Values.swarm.replicaCount }}
+            - --cluster-to={{ .Values.smoke.config.swarmReplicas }}
             - --cluster-scheme=http
             - --filesize={{ .Values.smoke.config.filesize }}
             - --single
             - --sync-delay={{ .Values.smoke.config.syncdelay }}
             - --verbosity=5
             - --metrics
-            - --metrics.influxdb.endpoint=http://{{ template "swarm.influxdb.fullname" . }}:8086
-            - --metrics.influxdb.username={{ .Values.influxdb.setDefaultUser.user.username }}
-            - --metrics.influxdb.password={{ .Values.influxdb.setDefaultUser.user.password }}
+            - --metrics.influxdb.endpoint=http://{{ .Values.smoke.config.influxdbEndpoint }}:8086
+            - --metrics.influxdb.username={{ .Values.smoke.config.influxdbUsername }}
+            - --metrics.influxdb.password={{ .Values.smoke.config.influxdbPassword }}
             - --metrics.influxdb.database=metrics
-            - --metrics.influxdb.host.tag=$(POD_NAME)
+            - --metrics.influxdb.host.tag=single-{{ .Values.smoke.config.syncdelay }}-{{ .Values.smoke.config.filesize }}
             - c
           restartPolicy: Never
-
-{{- end }}
