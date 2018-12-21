@@ -5,8 +5,8 @@
 smoke:
   # Image configuration
   image:
-    repository: ethdevops/swarm-smoke
-    tag: latest
+    repository: ethdevops/swarm
+    tag: edge
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -27,8 +27,7 @@ smoke:
     target: "swarm-private" # target application name (generally swarm or swarm-private)
     filesize: 110 # file size for generated random file in KB
     syncdelay: 5
-    swarmReplicas: 50
-    influxdbEndpoint: "swarm-influxdb.tony"
+    swarmReplicas: 5
     influxdbUsername: "swarm"
     influxdbPassword: "swarm"
   ## Configure resource requests and limits
