@@ -22,6 +22,7 @@ spec:
           - name: smoke
             image: {{ .Values.smoke.image.repository }}:{{ .Values.smoke.image.tag }}
             imagePullPolicy: {{ .Values.smoke.imagePullPolicy | quote }}
+            command: ["/run-smoke.sh"]
             resources:
 {{ toYaml .Values.smoke.resources | indent 14 }}
             args:
@@ -35,7 +36,7 @@ spec:
             - --sync-delay={{ .Values.smoke.config.syncdelay }}
             - --verbosity=5
             - --metrics
-            - --metrics.influxdb.endpoint=http://{{ .Values.smoke.config.influxdbEndpoint }}:8086
+            - --metrics.influxdb.endpoint=http://{{ .Values.smoke.config.target }}-influxdb.{{ $root.Release.Namespace }}:8086
             - --metrics.influxdb.username={{ .Values.smoke.config.influxdbUsername }}
             - --metrics.influxdb.password={{ .Values.smoke.config.influxdbPassword }}
             - --metrics.influxdb.database=metrics
