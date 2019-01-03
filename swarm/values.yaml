@@ -72,7 +72,8 @@ swarm:
   ingress:
     enabled: true
     tls:
-      acmeEnabled: false
+      enabled: false
+      acmeEnabled: false # Use cert-manager to generate certificates via ACME
     domain: default.swarm-gateways.net
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 20m
