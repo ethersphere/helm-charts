@@ -30,6 +30,7 @@ smoke:
     swarmReplicas: 5
     influxdbUsername: "swarm"
     influxdbPassword: "swarm"
+    influxdbReleaseName: "swarm-influxdb"
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}

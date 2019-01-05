@@ -36,7 +36,7 @@ spec:
             - --sync-delay={{ .Values.smoke.config.syncdelay }}
             - --verbosity=5
             - --metrics
-            - --metrics.influxdb.endpoint=http://{{ .Values.smoke.config.target }}-influxdb.{{ $root.Release.Namespace }}:8086
+            - --metrics.influxdb.endpoint=http://{{ .Values.smoke.config.influxdbReleaseName }}.{{ $root.Release.Namespace }}:8086
             - --metrics.influxdb.username={{ .Values.smoke.config.influxdbUsername }}
             - --metrics.influxdb.password={{ .Values.smoke.config.influxdbPassword }}
             - --metrics.influxdb.database=metrics
