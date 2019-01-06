@@ -11,6 +11,7 @@ metadata:
 spec:
   serviceName: {{ template "swarm.fullname" . }}-headless
   replicas: {{ .Values.swarm.replicaCount }}
+  podManagementPolicy: {{ .Values.swarm.podManagementPolicy }}
   selector:
     matchLabels:
       app: {{ template "swarm.name" . }}
@@ -30,6 +31,7 @@ spec:
     {{- end }}
     spec:
       serviceAccountName: {{ template "swarm.fullname" . }}
+      terminationGracePeriodSeconds: {{ .Values.swarm.terminationGracePeriodSeconds }}
       initContainers:
       - name: nodeport-getter
         image: lachlanevenson/k8s-kubectl:v1.10.9

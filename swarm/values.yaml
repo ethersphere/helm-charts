@@ -21,6 +21,11 @@ swarm:
   imagePullPolicy: Always
   # How many swarm nodes we want to run
   replicaCount: 2
+  # Pod management policy
+  # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
+  podManagementPolicy: OrderedReady  # Choose between "OrderedReady" or "Parallel"
+   # Duration in seconds the pod needs to terminate gracefully
+  terminationGracePeriodSeconds: 30
   config:
     # ENS API endpoint
     ens_api: http://geth-host:8545
