@@ -6,5 +6,41 @@ sudo: false
 services:
   - docker
 
+env:
+  global:
+    - HELM_URL=https://storage.googleapis.com/kubernetes-helm
+    - HELM_VERSION=2.11.0
+
+install:
+  # Installing Helm
+  - wget -q ${HELM_URL}/helm-v${HELM_VERSION}-linux-amd64.tar.gz
+  - tar xzfv helm-v${HELM_VERSION}-linux-amd64.tar.gz
+  - PATH=$(pwd)/linux-amd64/:$PATH
+  - helm init --client-only
+
 script:
   - make lint
+
+before_deploy:
+  # Decrypt and add SSH key used for pushing to the release GIT repo
+  - |
+    declare -r SSH_FILE="$(mktemp -u $HOME/.ssh/XXXXX)"
+
+    openssl aes-256-cbc \
+      -K $encrypted_12c8071d2874_key \
+      -iv $encrypted_12c8071d2874_iv \
+      -in ".travis/github_deploy_key.enc" \
+      -out "$SSH_FILE" -d
+
+    chmod 600 "$SSH_FILE" \
+    && printf "%s\n" \
+          "Host github.com" \
+          "  IdentityFile $SSH_FILE" \
+          "  LogLevel ERROR" >> ~/.ssh/config
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: make publish
+  on:
+    branch: master
