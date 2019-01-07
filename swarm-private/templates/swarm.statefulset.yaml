@@ -11,6 +11,7 @@ metadata:
 spec:
   serviceName: {{ template "swarm.fullname" . }}-headless
   replicas: {{ .Values.swarm.replicaCount }}
+  podManagementPolicy: {{ .Values.swarm.podManagementPolicy }}
   selector:
     matchLabels:
       app: {{ template "swarm.name" . }}
@@ -29,6 +30,7 @@ spec:
         "release-timestamp": {{.Release.Time.Seconds | quote }}
     {{- end }}
     spec:
+      terminationGracePeriodSeconds: {{ .Values.swarm.terminationGracePeriodSeconds }}
       containers:
       - name: swarm
         image: {{ .Values.swarm.image.repository }}:{{ .Values.swarm.image.tag }}
