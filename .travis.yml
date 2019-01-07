@@ -4,14 +4,27 @@ dist: trusty
 sudo: false
 
 services:
-- docker
+  - docker
+
+env:
+  global:
+    - HELM_URL=https://storage.googleapis.com/kubernetes-helm
+    - HELM_VERSION=2.11.0
+
+install:
+  # Installing Helm
+  - wget -q ${HELM_URL}/helm-v${HELM_VERSION}-linux-amd64.tar.gz
+  - tar xzfv helm-v${HELM_VERSION}-linux-amd64.tar.gz
+  - PATH=$(pwd)/linux-amd64/:$PATH
+  - helm init --client-only
 
 script:
-- make lint
+  - make lint
 
 before_deploy:
-- |
-    declare -r SSH_FILE="$(mktemp -u $HOME/.ssh/id_rsa)"
+  # Decrypt and add SSH key used for pushing to the release GIT repo
+  - |
+    declare -r SSH_FILE="$(mktemp -u $HOME/.ssh/XXXXX)"
 
     openssl aes-256-cbc \
       -K $encrypted_12c8071d2874_key \
