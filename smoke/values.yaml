@@ -30,6 +30,7 @@ smoke:
     swarmReplicas: 5
     influxdbUsername: "swarm"
     influxdbPassword: "swarm"
+    influxdbEndpoint: "http://swarm-influxdb:8086"
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}
