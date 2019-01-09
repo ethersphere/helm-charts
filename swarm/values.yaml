@@ -239,7 +239,7 @@ influxdb:
       retention_autocreate: true
       logging_enabled: true
     data:
-      query_log_enabled: true
+      query_log_enabled: false
       cache_max_memory_size: 1073741824
       cache_snapshot_memory_size: 26214400
       cache_snapshot_write_cold_duration: 10m0s
