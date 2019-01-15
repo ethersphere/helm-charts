@@ -41,5 +41,5 @@ spec:
             - --metrics.influxdb.password={{ .Values.smoke.config.influxdbPassword }}
             - --metrics.influxdb.database=metrics
             - --metrics.influxdb.host.tag=single-{{ .Values.smoke.config.syncdelay }}-{{ .Values.smoke.config.filesize }}
-            - c
+            - {{ .Values.smoke.config.operation }}
           restartPolicy: Never
