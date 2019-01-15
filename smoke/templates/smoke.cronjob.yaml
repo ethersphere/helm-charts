@@ -26,20 +26,20 @@ spec:
             resources:
 {{ toYaml .Values.smoke.resources | indent 14 }}
             args:
-            - --cluster-endpoint={{ $root.Release.Namespace }}
             - --app={{ .Values.smoke.config.target }}
+            - --verbosity=5
+            - --cluster-endpoint={{ $root.Release.Namespace }}
             - --cluster-from=0
             - --cluster-to={{ .Values.smoke.config.swarmReplicas }}
             - --cluster-scheme=http
-            - --filesize={{ .Values.smoke.config.filesize }}
-            - --single
-            - --sync-delay={{ .Values.smoke.config.syncdelay }}
-            - --verbosity=5
             - --metrics
             - --metrics.influxdb.endpoint={{ .Values.smoke.config.influxdbEndpoint }}
             - --metrics.influxdb.username={{ .Values.smoke.config.influxdbUsername }}
             - --metrics.influxdb.password={{ .Values.smoke.config.influxdbPassword }}
             - --metrics.influxdb.database=metrics
-            - --metrics.influxdb.host.tag=single-{{ .Values.smoke.config.syncdelay }}-{{ .Values.smoke.config.filesize }}
+            - --metrics.influxdb.host.tag={{ .Values.smoke.config.name }}
+{{- range $i, $flag := .Values.smoke.config.extraFlags }}
+            - {{ $flag }}
+{{- end }}
             - {{ .Values.smoke.config.operation }}
           restartPolicy: Never
