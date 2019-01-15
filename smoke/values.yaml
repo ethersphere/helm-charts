@@ -31,6 +31,7 @@ smoke:
     influxdbUsername: "swarm"
     influxdbPassword: "swarm"
     influxdbEndpoint: "http://swarm-influxdb:8086"
+    operation: upload_and_sync # smoke test operation that we want to run
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}
