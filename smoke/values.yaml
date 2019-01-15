@@ -25,13 +25,17 @@ smoke:
   failedJobsHistoryLimit: 3
   config:
     target: "swarm-private" # target application name (generally swarm or swarm-private)
-    filesize: 110 # file size for generated random file in KB
-    syncdelay: 5
     swarmReplicas: 5
     influxdbUsername: "swarm"
     influxdbPassword: "swarm"
     influxdbEndpoint: "http://swarm-influxdb:8086"
-    operation: upload_and_sync # smoke test operation that we want to run
+    operation: "upload_and_sync" # smoke test operation that we want to run
+    name: "upload-sync-50-5-30"
+    extraFlags:
+      - --single
+      - --filesize=50
+      - --sync-delay=30
+
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}
