@@ -63,7 +63,7 @@ swarm:
     bzznetworkid: 300
     # LevelDB Store size - by default 4kb * 10^5 == 400 megabytes
     storesize: 100000
-    # List of bootnodes. Example configuration:
+    extraFlags: {}
   secrets:
      # Used to setup a sample Ethereum account in the data directory.
      # If a data directory is mounted with a volume, the first Ethereum account from it
