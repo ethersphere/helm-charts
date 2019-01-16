@@ -95,6 +95,9 @@ spec:
           --pprofaddr=0.0.0.0
           --pprofport=6060
           {{- end }}
+{{- range $i, $flag := .Values.swarm.config.extraFlags }}
+          {{ $flag }}
+{{- end }}
         env:
         - name: POD_NAME
           valueFrom:

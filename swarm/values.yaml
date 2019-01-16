@@ -44,6 +44,8 @@ swarm:
     # - enode://xxxxxx@10.0.1.5:30301
     # - enode://yyyyyy@10.0.1.7:30301
     bootnodes: []
+    extraFlags: {}
+
   secrets:
      # Used to setup a sample Ethereum account in the data directory.
      # If a data directory is mounted with a volume, the first Ethereum account from it
