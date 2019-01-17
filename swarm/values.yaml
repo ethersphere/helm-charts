@@ -73,7 +73,7 @@ swarm:
       memory: 256Mi
       cpu: 0.1
     limits:
-      memory: 512Mi
+      memory: 1024Mi
       cpu: 0.3
   ## Node labels and tolerations for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
