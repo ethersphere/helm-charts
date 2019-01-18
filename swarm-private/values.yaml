@@ -5,7 +5,7 @@
 bootnode:
   # Image configuration
   image:
-    repository: ethdevops/bootnode
+    repository: ethdevops/swarm
     tag: latest
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -13,9 +13,11 @@ bootnode:
   ##
   imagePullPolicy: Always
   config:
-    verbosity: 2
+    verbosity: 3
     publicaddr: 846c424961adc146d54861bdf1eb6015e6908b689fd12d01c61307fffc848c22e514f5c898dc9243fbb17aa80750b556772599d84fe86a4b715f40ebc4c049bf
     nodekey: 09a28f7be03b782768ae2a8e2de90e7e27cd643a60f2a68e57514097bfa23566
+    # Network identifier
+    bzznetworkid: 300
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}
