@@ -18,6 +18,7 @@ bootnode:
     nodekey: 09a28f7be03b782768ae2a8e2de90e7e27cd643a60f2a68e57514097bfa23566
     # Network identifier
     bzznetworkid: 300
+    extraFlags: []
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: {}
