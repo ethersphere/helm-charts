@@ -44,11 +44,11 @@ spec:
           --bootnode-mode
           --nodekey=/keys/bootnode.key
           --verbosity={{ .Values.bootnode.config.verbosity }}
-          --maxpeers 2000
+          --maxpeers=5000
           --nat=ip:$POD_IP
           --port=30301
           --bzznetworkid={{ .Values.bootnode.config.bzznetworkid }}
-          --bootnodes=enode://0db3ed33199e4168944c2c0a2b5994c8521ccb942f43fb432f481d88a02c6dee71d4e1da3727a29d4952d7653c862f74c6822d68abf6ae63d9251bbece8b87a5@10.0.55.155:30499
+          --bootnodes=""
 {{- range $i, $flag := .Values.bootnode.config.extraFlags }}
           {{ $flag }}
 {{- end }}
