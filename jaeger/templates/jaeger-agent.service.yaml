@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
     component: jaeger
 spec:
-  type: {{ .Values.jaeger.service.agent.type }}
+  type: {{ .Values.service.agent.type }}
   selector:
     app: {{ template "jaeger.name" . }}
     release: {{ .Release.Name }}

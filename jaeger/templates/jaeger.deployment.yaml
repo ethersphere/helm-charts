@@ -26,8 +26,8 @@ spec:
     spec:
       containers:
       - name: jaeger
-        image: {{ .Values.jaeger.image.repository }}:{{ .Values.jaeger.image.tag }}
-        imagePullPolicy: {{ .Values.jaeger.imagePullPolicy }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
           - containerPort: 6831
             protocol: UDP
