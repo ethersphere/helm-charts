@@ -48,6 +48,7 @@ spec:
           --nat=ip:$POD_IP
           --port=30301
           --bzznetworkid={{ .Values.bootnode.config.bzznetworkid }}
+          # Non-existent bootnode until we have a way to specify that we want empty bootnodes list, see https://github.com/ethereum/go-ethereum/pull/18509
           --bootnodes=enode://1519bbd8251a4f3a0a2aa1f62b08741ded86ca8d4f08ade1fd3447866816ce129f3dae84b8078d2a6a6d41764c2ebb39ec608695fa588912b84025fd514f8ab0@10.255.255.212:33399
 {{- range $i, $flag := .Values.bootnode.config.extraFlags }}
           {{ $flag }}
