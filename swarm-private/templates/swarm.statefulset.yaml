@@ -66,6 +66,7 @@ spec:
           --metrics.influxdb.username={{ .Values.influxdb.setDefaultUser.user.username }}
           --metrics.influxdb.password={{ .Values.influxdb.setDefaultUser.user.password }}
           --metrics.influxdb.database=metrics
+          --metrics.influxdb.host.tag=$(POD_NAME)
       {{- end }}
       {{- if .Values.swarm.tracingEnabled }}
           --tracing
