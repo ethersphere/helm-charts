@@ -6,6 +6,10 @@ sudo: false
 services:
   - docker
 
+branches:
+  only:
+  - master
+
 env:
   global:
     - HELM_URL=https://storage.googleapis.com/kubernetes-helm
