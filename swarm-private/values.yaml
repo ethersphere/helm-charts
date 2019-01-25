@@ -6,7 +6,7 @@ bootnode:
   # Image configuration
   image:
     repository: ethdevops/swarm
-    tag: latest
+    tag: edge
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -38,7 +38,7 @@ swarm:
   # Image configuration
   image:
     repository: ethdevops/swarm
-    tag: latest
+    tag: edge
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
