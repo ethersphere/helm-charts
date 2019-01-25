@@ -311,7 +311,7 @@ influxdb:
       enabled: true
       bind_address: 8086
       auth_enabled: false
-      log_enabled: true
+      log_enabled: false
       write_tracing: false
       pprof_enabled: true
       https_enabled: false
