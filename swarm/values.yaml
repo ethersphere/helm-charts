@@ -24,6 +24,9 @@ swarm:
   # Pod management policy
   # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
   podManagementPolicy: OrderedReady  # Choose between "OrderedReady" or "Parallel"
+  # Update strategy:
+  # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+  updateStrategy: "RollingUpdate"
    # Duration in seconds the pod needs to terminate gracefully
   terminationGracePeriodSeconds: 30
   config:
