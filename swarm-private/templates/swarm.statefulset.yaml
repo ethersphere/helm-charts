@@ -12,7 +12,8 @@ spec:
   serviceName: {{ template "swarm.fullname" . }}-headless
   replicas: {{ .Values.swarm.replicaCount }}
   podManagementPolicy: {{ .Values.swarm.podManagementPolicy }}
-  updateStrategy: {{ .Values.swarm.updateStrategy }}
+  updateStrategy:
+    type: {{ .Values.swarm.updateStrategy.type }}
   selector:
     matchLabels:
       app: {{ template "swarm.name" . }}
