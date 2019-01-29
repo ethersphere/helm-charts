@@ -37,7 +37,7 @@ spec:
             - --metrics.influxdb.username={{ .Values.smoke.config.influxdbUsername }}
             - --metrics.influxdb.password={{ .Values.smoke.config.influxdbPassword }}
             - --metrics.influxdb.database=metrics
-            - --metrics.influxdb.host.tag={{ .Values.smoke.config.name }}
+            - --metrics.influxdb.tags="host={{ .Values.smoke.config.name }}"
 {{- range $i, $flag := .Values.smoke.config.extraFlags }}
             - {{ $flag }}
 {{- end }}
