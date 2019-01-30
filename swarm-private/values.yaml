@@ -488,11 +488,6 @@ grafana:
   adminUser: swarm
   adminPassword: swarm
 
-  # Allow anonymous access
-  auth:
-    anonymous:
-      enabled: true
-
   ## Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
@@ -597,6 +592,12 @@ grafana:
       mode: console
     grafana_net:
       url: https://grafana.net
+
+    # Allow anonymous access
+    auth:
+      anonymous:
+        enabled: true
+
   ## LDAP Authentication can be enabled with the following values on grafana.ini
   ## NOTE: Grafana will fail to start if the value for ldap.toml is invalid
     # auth.ldap:
