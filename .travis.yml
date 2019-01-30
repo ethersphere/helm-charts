@@ -48,3 +48,11 @@ deploy:
   script: make publish
   on:
     branch: master
+
+notifications:
+  email:
+    recipients:
+      - anton@ethereum.org
+      - rafael@ethereum.org
+    on_success: never
+    on_failure: always
