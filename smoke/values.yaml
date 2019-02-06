@@ -34,6 +34,7 @@ smoke:
     name: "upload-sync-50-5-30"
     extraFlags:
       - --single
+      - --http-port=8500
       - --filesize=50
       - --sync-delay=30
 
