@@ -24,8 +24,9 @@ smoke:
   # How many failed jobs we should keep
   failedJobsHistoryLimit: 3
   config:
-    target: "swarm-private" # target application name (generally swarm or swarm-private)
     swarmReplicas: 5
+    prefix: "swarm-private"
+    suffix: "swarm-private-headless"
     influxdbUsername: "swarm"
     influxdbPassword: "swarm"
     influxdbEndpoint: "http://swarm-influxdb:8086"
