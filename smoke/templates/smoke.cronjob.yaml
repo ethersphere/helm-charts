@@ -26,7 +26,7 @@ spec:
             resources:
 {{ toYaml .Values.smoke.resources | indent 14 }}
             args:
-            - --hosts={{- range $i, $e := until (int $root.Values.smoke.config.swarmReplicas) }}{{if ne $i 0}},{{end}}{{ $root.Values.smoke.config.prefix }}-{{ $i }}{{- end }}
+            - --hosts={{- range $i, $e := until (int $root.Values.smoke.config.swarmReplicas) }}{{if ne $i 0}},{{end}}{{ $root.Values.smoke.config.prefix }}-{{ $i }}.{{ $root.Values.smoke.config.suffix }}{{- end }}
             - --verbosity=5
             - --metrics
             - --metrics.influxdb.endpoint={{ .Values.smoke.config.influxdbEndpoint }}
