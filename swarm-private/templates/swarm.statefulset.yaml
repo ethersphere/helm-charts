@@ -44,6 +44,10 @@ spec:
         - -ac
         - >
           export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode | grep Address | awk '{ print $3 }') &&
+        {{- if .Values.swarm.metricsEnabled }}
+          export BZZKEY=$(sh /run.sh print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
+          export PUBKEY=$(sh /run.sh print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
+        {{- end }}
           /run.sh
           --ens-api={{ .Values.swarm.config.ens_api }}
           --port=30399
@@ -68,7 +72,7 @@ spec:
           --metrics.influxdb.username={{ .Values.influxdb.setDefaultUser.user.username }}
           --metrics.influxdb.password={{ .Values.influxdb.setDefaultUser.user.password }}
           --metrics.influxdb.database=metrics
-          --metrics.influxdb.tags="host=$(POD_NAME)"
+          --metrics.influxdb.tags="host=$(POD_NAME),bzzkey=$BZZKEY,pubkey=$PUBKEY"
       {{- end }}
       {{- if .Values.swarm.tracingEnabled }}
           --tracing
