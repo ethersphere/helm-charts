@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "globalstore.fullname" . }}
+  labels:
+    app: {{ template "globalstore.name" . }}
+    chart: {{ template "globalstore.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: global-store
+spec:
+  serviceName: {{ template "globalstore.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "globalstore.name" . }}
+      release: {{ .Release.Name }}
+      component: global-store
+  template:
+    metadata:
+      labels:
+        app: {{ template "globalstore.name" . }}
+        release: {{ .Release.Name }}
+        component: global-store
+    spec:
+      containers:
+      - name: global-store
+        image: {{ .Values.globalstore.image.repository }}:{{ .Values.globalstore.image.tag }}
+        imagePullPolicy: {{ .Values.globalstore.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.globalstore.resources | indent 10 }}
+        args:
+        - websocket
+{{- if .Values.globalstore.persistence.diskEnabled }}
+        - --dir=/data
+{{- end }}
+{{- range $i, $flag := .Values.globalstore.config.extraFlags }}
+        - {{ $flag }}
+{{- end }}
+        ports:
+        - name: globalstore
+          containerPort: 3033
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+{{- if not .Values.globalstore.persistence.pvc.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "globalstore.name" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+        - {{ .Values.globalstore.persistence.pvc.accessMode | quote }}
+      resources:
+          requests:
+            storage: {{ .Values.globalstore.persistence.pvc.size | quote }}
+  {{- if .Values.globalstore.persistence.pvc.storageClass }}
+    {{- if (eq "-" .Values.globalstore.persistence.pvc.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.globalstore.persistence.pvc.storageClass }}"
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- with .Values.globalstore.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.globalstore.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.globalstore.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}

@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "globalstore.fullname" . }}
+  labels:
+    app: {{ template "globalstore.name" . }}
+    chart: {{ template "globalstore.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: global-store
+spec:
+  selector:
+    app: {{ template "globalstore.name" . }}
+    release: {{ .Release.Name }}
+    component: global-store
+  clusterIP: None
+  ports:
+  - name: network
+    port: 3033

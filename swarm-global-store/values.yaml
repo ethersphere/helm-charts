@@ -1,0 +1,41 @@
+# Default values for swarm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+globalstore:
+  # Image configuration
+  image:
+    repository: ethdevops/swarm-global-store
+    tag: edge
+  ## Specify a imagePullPolicy
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  imagePullPolicy: Always
+  config:
+    extraFlags:
+    - "--verbosity=3"
+  persistence:
+    ## Enable storage to be on disk. When not enabled, the global-store will persist data in-memory (RAM)
+    diskEnabled: false
+    pvc:
+      ## Create a PVC to use for disk storage
+      enabled: false
+      ## Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 8Gi
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources: {}
+  ## Node labels and tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
