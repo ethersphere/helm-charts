@@ -5,7 +5,7 @@
 smoke:
   # Image configuration
   image:
-    repository: ethdevops/swarm
+    repository: ethdevops/swarm-smoke
     tag: edge
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
