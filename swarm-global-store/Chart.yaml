@@ -1,0 +1,19 @@
+name: swarm-global-store
+version: 0.0.1
+description: A global store that can be used by Swarm nodes to persist their data. Mainly used for debugging and testing purposes.
+keywords:
+- ethereum
+- blockchain
+- swarm
+- storage
+- web3
+home: https://swarm.ethereum.org
+sources:
+- https://github.com/ethereum/go-ethereum
+- https://github.com/ethereum/go-ethereum/tree/master/swarm
+- https://github.com/ethereum/go-ethereum/tree/master/cmd/swarm/global-store
+maintainers:
+- name: skylenet
+  email: rafael@ethereum.org
+icon: https://swarm-guide.readthedocs.io/en/latest/_images/swarm.png
+appVersion: dev
