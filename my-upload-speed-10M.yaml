@@ -1,0 +1,13 @@
+smoke:
+  image:
+    repository: ethdevops/swarm
+    tag: fabio 
+  schedule: "*/5 * * * *"
+  config:
+    name: "upload-speed-10M"
+    swarmReplicas: 1 
+    target: "swarm-private"
+    operation: "upload_speed"
+    influxdbEndpoint: "http://swarm-private-influxdb:8086"
+    extraFlags:
+      - --filesize=10000

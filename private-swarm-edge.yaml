@@ -1,0 +1,34 @@
+swarm:
+  metricsEnabled: true 
+  tracingEnabled: false 
+  profilingEnabled: false
+  image:
+    repository: ethdevops/swarm
+    tag: edge 
+  replicaCount: 20 
+  podManagementPolicy: Parallel
+  config:
+    ens_api: http://mainnet-geth-geth.geth:8545
+    verbosity: 4
+    debug: true
+    maxpeers: 25
+    bzznetworkid: 99 
+    bootnodes: []
+  secrets:
+    password: qwerty
+  persistence:
+    enabled: false
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 20m
+    domain: stg.swarm-gateways.net
+    enabled: true
+    tls:
+      acmeEnabled: true
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: 0.25 
+    limits:
+      memory: 4Gi
+      cpu: 2

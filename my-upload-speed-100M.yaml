@@ -1,0 +1,12 @@
+smoke:
+  image:
+    repository: ethdevops/swarm
+    tag: fabio 
+  schedule: "*/5 * * * *"
+  config:
+    name: "upload-speed-1OOM"
+    swarmReplicas: 1 
+    target: "swarm-private"
+    operation: "upload_speed"
+    extraFlags:
+      - --filesize=100000
