@@ -1,5 +1,5 @@
 swarm:
-  metricsEnabled: true 
+  metricsEnabled: false 
   tracingEnabled: false 
   profilingEnabled: false
   image:
@@ -15,8 +15,10 @@ swarm:
     bzznetworkid: 99 
     bootnodes: []
     extraFlags: 
-      - --rpc
-      - --rpcapi=bzz,admin,debug
+      - --ws
+      - --wsaddr=0.0.0.0
+      - --wsapi=admin,debug,bzz
+      - --wsorigins="*"
   secrets:
     password: qwerty
   persistence:

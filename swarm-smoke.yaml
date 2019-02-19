@@ -5,7 +5,7 @@
 smoke:
   # Image configuration
   image:
-    repository: ethdevops/swarm
+    repository: ethdevops/swarm-smoke
     tag: fabio 
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -15,7 +15,7 @@ smoke:
   # Schedule is a cron format string that defines when a job is to be created and executed.
   # https://en.wikipedia.org/wiki/Cron
   # The default is every 5 minutes
-  schedule: "*/5 * * * *"
+  schedule: "*/2 * * * *"
   # concurrencyPolicy can be "Allow", "Forbid" or "Replace"
   # https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy
   concurrencyPolicy: Forbid
@@ -34,7 +34,7 @@ smoke:
     name: "upload-sync-50-5-30"
     extraFlags:
       - --single
-      - --http-port=8545
+      - --http-port=8500
       - --filesize=50
       - --sync-delay=30
       - --timeout=10
