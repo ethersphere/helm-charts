@@ -15,8 +15,18 @@ spec:
   failedJobsHistoryLimit: {{ $root.Values.test.failedJobsHistoryLimit }}
   concurrencyPolicy: {{ $root.Values.test.concurrencyPolicy | quote }}
   jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "test.name" $root }}
+        chart: {{ template "test.chart" . }}
+        release: {{ .Release.Name }}
     spec:
       template:
+        metadata:
+          labels:
+            app: {{ template "test.name" $root }}
+            chart: {{ template "test.chart" . }}
+            release: {{ .Release.Name }}
         spec:
           containers:
           - name: test

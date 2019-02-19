@@ -11,4 +11,4 @@ git clone https://github.com/ethersphere/go-ethereum
 cd "$GOPATH/src/github.com/ethereum/go-ethereum"
 git checkout "$VERSION"
 
-$@
+sh -c "$@"
