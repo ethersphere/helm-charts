@@ -1,0 +1,39 @@
+# Default values for swarm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+test:
+  # Image configuration
+  image:
+    repository: golang
+    tag: 1.11-alpine
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  imagePullPolicy: IfNotPresent
+  # Schedule is a cron format string that defines when a job is to be created and executed.
+  # https://en.wikipedia.org/wiki/Cron
+  # The default is every 6 hours
+  schedule: "0 */6 * * *"
+  # concurrencyPolicy can be "Allow", "Forbid" or "Replace"
+  # https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy
+  concurrencyPolicy: Forbid
+  # How many successfull jobs we should keep
+  successfulJobsHistoryLimit: 3
+  # How many failed jobs we should keep
+  failedJobsHistoryLimit: 3
+  config:
+    # Version to be used (branch, commit hash, tag)
+    version: master
+    # Test command to execute
+    command: go test -v ./swarm/... -longrunning true
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    requests:
+      memory: 10Gi
+      cpu: 2.0
+    limits:
+      memory: 10Gi
+      cpu: 3.0

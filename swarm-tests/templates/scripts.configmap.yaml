@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "test.fullname" . }}-scripts
+  labels:
+    app: {{ template "test.name" . }}
+    chart: {{ template "test.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+{{ (.Files.Glob "scripts/*").AsConfig | indent 2 }}

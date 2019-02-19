@@ -1,0 +1,40 @@
+{{- $root := . -}}
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "test.fullname" $root }}
+  labels:
+    app: {{ template "test.name" $root }}
+    chart: {{ template "test.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: "{{ $root.Values.test.schedule }}"
+  successfulJobsHistoryLimit: {{ $root.Values.test.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ $root.Values.test.failedJobsHistoryLimit }}
+  concurrencyPolicy: {{ $root.Values.test.concurrencyPolicy | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: test
+            image: {{ .Values.test.image.repository }}:{{ .Values.test.image.tag }}
+            imagePullPolicy: {{ .Values.test.imagePullPolicy | quote }}
+            env:
+            - name: VERSION
+              value: {{ .Values.test.config.version | quote}}
+            resources:
+{{ toYaml .Values.test.resources | indent 14 }}
+            command: ["sh", "/scripts/run-tests.sh"]
+            args:
+            - {{ .Values.test.config.command | quote}}
+            volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          restartPolicy: Never
+          volumes:
+          - name: scripts
+            configMap:
+              name: {{ template "test.fullname" . }}-scripts
