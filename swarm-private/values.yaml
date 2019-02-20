@@ -107,6 +107,9 @@ swarm:
 
   ingress:
     enabled: true
+    # Warning: Exposing the websocket RPC API can be dangerous.
+    #          This should be used only for testing purposes.
+    exposeWebsocketRPC: false
     tls:
       enabled: false
       acmeEnabled: false # Use cert-manager to generate certificates via ACME

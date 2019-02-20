@@ -216,6 +216,9 @@ influxdb:
 
   ingress:
     enabled: false
+    # Warning: Exposing the websocket RPC API can be dangerous.
+    #          This should be used only for testing purposes.
+    exposeWebsocketRPC: false
     tls: false
     # secretName: my-tls-cert # only needed if tls above is true
     hostname: influxdb.foobar.com
