@@ -15,8 +15,18 @@ spec:
   failedJobsHistoryLimit: {{ $root.Values.smoke.failedJobsHistoryLimit }}
   concurrencyPolicy: {{ $root.Values.smoke.concurrencyPolicy | quote }}
   jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "smoke.name" $root }}
+        chart: {{ template "smoke.chart" . }}
+        release: {{ .Release.Name }}
     spec:
       template:
+        metadata:
+          labels:
+            app: {{ template "smoke.name" $root }}
+            chart: {{ template "smoke.chart" . }}
+            release: {{ .Release.Name }}
         spec:
           containers:
           - name: smoke
