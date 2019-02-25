@@ -130,7 +130,7 @@ jaeger:
   replicaCount: 1
   service:
     query:
-      type: NodePort
+      type: ClusterIP
     agent:
       type: ClusterIP
   ## Configure resource requests and limits
@@ -157,7 +157,6 @@ influxdb:
     pullPolicy: IfNotPresent
 
   ## Specify a service type
-  ## NodePort is default
   ## ref: http://kubernetes.io/docs/user-guide/services/
   ##
   service:
