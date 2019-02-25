@@ -25,12 +25,10 @@ spec:
         app: {{ template "swarm.name" . }}
         release: {{ .Release.Name }}
         component: swarm
-    {{- if or (eq .Values.swarm.image.tag "latest") (eq .Values.swarm.image.tag "edge") }}
+        {{- if .Values.swarm.podAnnotations }}
       annotations:
-        # Note: 'latest' or 'edge' tag is beeing used, therefore we keep changing
-        # this annotation to force a redeployment of the pods within the StatefulSet
-        "release-timestamp": {{.Release.Time.Seconds | quote }}
-    {{- end }}
+{{ toYaml .Values.swarm.podAnnotations | indent 8 }}
+        {{- end }}
     spec:
       serviceAccountName: {{ template "swarm.fullname" . }}
       terminationGracePeriodSeconds: {{ .Values.swarm.terminationGracePeriodSeconds }}

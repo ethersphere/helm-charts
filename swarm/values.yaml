@@ -19,6 +19,9 @@ swarm:
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   imagePullPolicy: Always
+  ## (dict) If specified, apply these annotations to the swarm pods
+  # podAnnotations:
+  #   fluentbit.io/exclude: "true"
   # How many swarm nodes we want to run
   replicaCount: 2
   # Pod management policy

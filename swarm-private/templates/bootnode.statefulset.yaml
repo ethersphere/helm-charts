@@ -22,12 +22,10 @@ spec:
         app: {{ template "swarm.name" . }}
         release: {{ .Release.Name }}
         component: bootnode
-    {{- if or (eq .Values.bootnode.image.tag "latest") (eq .Values.bootnode.image.tag "edge") }}
+        {{- if .Values.bootnode.podAnnotations }}
       annotations:
-        # Note: 'latest' or 'edge' tag is beeing used, therefore we keep changing
-        # this annotation to force a redeployment of the pods within the StatefulSet
-        "release-timestamp": {{.Release.Time.Seconds | quote }}
-    {{- end }}
+{{ toYaml .Values.bootnode.podAnnotations | indent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: bootnode
