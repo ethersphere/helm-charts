@@ -25,6 +25,10 @@ spec:
         app: {{ template "swarm.name" . }}
         release: {{ .Release.Name }}
         component: swarm
+        {{- if .Values.swarm.podAnnotations }}
+      annotations:
+{{ toYaml .Values.swarm.podAnnotations | indent 8 }}
+        {{- end }}
     spec:
       terminationGracePeriodSeconds: {{ .Values.swarm.terminationGracePeriodSeconds }}
       containers:

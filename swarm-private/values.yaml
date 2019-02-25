@@ -12,6 +12,9 @@ bootnode:
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   imagePullPolicy: Always
+  ## (dict) If specified, apply these annotations to the bootnode pod
+  # podAnnotations:
+  #   fluentbit.io/exclude: "true"
   config:
     verbosity: 3
     publicaddr: 846c424961adc146d54861bdf1eb6015e6908b689fd12d01c61307fffc848c22e514f5c898dc9243fbb17aa80750b556772599d84fe86a4b715f40ebc4c049bf
@@ -44,6 +47,9 @@ swarm:
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   imagePullPolicy: Always
+  ## (dict) If specified, apply these annotations to the swarm pods
+  # podAnnotations:
+  #   fluentbit.io/exclude: "true"
   # How many swarm nodes we want to run
   replicaCount: 0
   # Pod management policy

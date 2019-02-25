@@ -22,6 +22,10 @@ spec:
         app: {{ template "swarm.name" . }}
         release: {{ .Release.Name }}
         component: bootnode
+        {{- if .Values.bootnode.podAnnotations }}
+      annotations:
+{{ toYaml .Values.bootnode.podAnnotations | indent 8 }}
+        {{- end }}
     spec:
       containers:
       - name: bootnode
