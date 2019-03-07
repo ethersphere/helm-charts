@@ -1,0 +1,13 @@
+name: kapacitor-importer
+version: 0.0.1
+description: Used to import .tick scripts to an existing kapacitor instance
+keywords:
+- kapacitor
+- alerting
+home: https://docs.influxdata.com/kapacitor/
+sources:
+- https://github.com/influxdata/kapacitor
+maintainers:
+- name: skylenet
+  email: rafael@ethereum.org
+appVersion: dev

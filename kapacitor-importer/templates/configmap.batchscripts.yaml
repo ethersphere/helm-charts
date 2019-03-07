@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kapacitorImporter.fullname" . }}-batchscripts
+  labels:
+    app: {{ template "kapacitorImporter.name" . }}
+    chart: {{ template "kapacitorImporter.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  "README.txt": "This directory should contain .tick batch scripts"
+{{- if  .Values.batchScripts }}
+{{ toYaml .Values.batchScripts | indent 2 }}
+{{- end }}
