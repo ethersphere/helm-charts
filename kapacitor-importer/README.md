@@ -1,6 +1,6 @@
 # kapacitor-importer
 
-This chart is used to run a job that imports batch or stream .tick scripts into an exising kapacitor instance.
+This chart is used to run a job that imports batch or stream .tick scripts into an existing kapacitor instance.
 
 
 For more information, check the default [`values.yaml`](values.yaml). You need to overwrite the `kapacitorURL` to point to your kapacitor service.
