@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kapacitorImporter.fullname" . }}-streamscripts
+  labels:
+    app: {{ template "kapacitorImporter.name" . }}
+    chart: {{ template "kapacitorImporter.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  "README.txt": "This directory should contain .tick stream scripts"
+{{- if  .Values.streamScripts }}
+{{ toYaml .Values.streamScripts | indent 2 }}
+{{- end }}

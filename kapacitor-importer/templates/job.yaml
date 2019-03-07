@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "kapacitorImporter.fullname" . }}
+  labels:
+    app: {{ template "kapacitorImporter.name" . }}
+    chart: {{ template "kapacitorImporter.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      name: "{{.Release.Name}}"
+      labels:
+        heritage: {{.Release.Service | quote }}
+        release: {{.Release.Name | quote }}
+        chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+      annotations:
+        checksum/init-config: {{ include (print $.Template.BasePath "/configmap.init.yaml") . | sha256sum }}
+        checksum/batch-config: {{ include (print $.Template.BasePath "/configmap.batchscripts.yaml") . | sha256sum }}
+        checksum/stream-config: {{ include (print $.Template.BasePath "/configmap.streamscripts.yaml") . | sha256sum }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: kapacitor-importer
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["bash", "/init/init.sh"]
+        env:
+          - name: KAPACITOR_URL
+            value: "{{ .Values.kapacitorURL }}"
+        volumeMounts:
+        - name: init
+          mountPath: /init
+        - name: batchscripts
+          mountPath: /scripts-batch
+        - name: streamscripts
+          mountPath: /scripts-stream
+      volumes:
+      - name: batchscripts
+        configMap:
+          name: {{ template "kapacitorImporter.fullname" . }}-batchscripts
+      - name: streamscripts
+        configMap:
+          name: {{ template "kapacitorImporter.fullname" . }}-streamscripts
+      - name: init
+        configMap:
+          name: {{ template "kapacitorImporter.fullname" . }}-init

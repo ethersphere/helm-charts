@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kapacitorImporter.fullname" . }}-init
+  labels:
+    app: {{ template "kapacitorImporter.name" . }}
+    chart: {{ template "kapacitorImporter.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  init.sh: |-
+    #!/usr/bin/env bash
+    set -xe
+
+    echo "Waiting kapacitor to launch on 8080..."
+
+    while ! kapacitor stats general; do
+      sleep 1
+    done
+
+    echo "Kapacitor launched"
+    sleep 5
+
+    kapacitor list tasks
+{{- if  .Values.batchScripts }}
+    ls -la /scripts-batch
+    for f in /scripts-batch/*.tick
+    do
+      name="$(basename $f)"
+      name="${name/.tick/}"
+      kapacitor define batch_$name -type batch -tick $f
+      kapacitor enable batch_$name
+    done
+{{- end }}
+{{- if  .Values.streamScripts }}
+    ls -la /scripts-stream
+    for f in /scripts-stream/*.tick
+    do
+      name="$(basename $f)"
+      name="${name/.tick/}"
+      kapacitor define stream_$name -type stream -tick $f
+      kapacitor enable stream_$name
+    done
+{{- end }}
+    kapacitor list tasks
