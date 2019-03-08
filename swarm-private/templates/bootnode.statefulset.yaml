@@ -71,10 +71,37 @@ spec:
         - name: keys
           mountPath: /keys
           readOnly: true
+        - name: data
+          mountPath: /root/.ethereum
       volumes:
       - name: keys
         secret:
           secretName: {{ template "swarm.fullname" . }}-bootnode
+{{- if not .Values.bootnode.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "swarm.name" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+        - {{ .Values.bootnode.persistence.accessMode | quote }}
+      resources:
+          requests:
+            storage: {{ .Values.bootnode.persistence.size | quote }}
+  {{- if .Values.bootnode.persistence.storageClass }}
+    {{- if (eq "-" .Values.bootnode.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.bootnode.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
+{{- end }}
 {{- with .Values.bootnode.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
