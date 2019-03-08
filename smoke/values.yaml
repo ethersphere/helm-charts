@@ -7,11 +7,7 @@ smoke:
   image:
     repository: ethdevops/swarm-smoke
     tag: edge
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  imagePullPolicy: Always
+  imagePullPolicy: IfNotPresent
   # Schedule is a cron format string that defines when a job is to be created and executed.
   # https://en.wikipedia.org/wiki/Cron
   # The default is every 5 minutes

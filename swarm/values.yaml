@@ -14,11 +14,7 @@ swarm:
   image:
     repository: ethdevops/swarm
     tag: latest
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  imagePullPolicy: Always
+  imagePullPolicy: IfNotPresent
   ## (dict) If specified, apply these annotations to the swarm pods
   # podAnnotations:
   #   fluentbit.io/exclude: "true"
@@ -102,10 +98,6 @@ jaeger:
   image:
     repository: jaegertracing/all-in-one
     tag: 1.7.0
-  ## Specify a imagePullPolicy
-  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   service:
