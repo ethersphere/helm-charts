@@ -1,0 +1,56 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "swarm.fullname" . }}-network
+  labels:
+    app: {{ template "swarm.name" . }}
+    chart: {{ template "swarm.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [{{ template "swarm.name" . }}]
+      - key: release
+        operator: In
+        values: [{{ .Release.Name }}]
+      - key: component
+        operator: In
+        values: [bootnode,swarm]
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    - {}
+  ingress:
+    - from:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 8500
+        - protocol: TCP
+          port: 8546
+        - protocol: TCP
+          port: 6060
+    - from:
+      - podSelector:
+          matchExpressions:
+            - key: app
+              operator: In
+              values: [{{ template "swarm.name" . }}]
+            - key: release
+              operator: In
+              values: [{{ .Release.Name }}]
+            - key: component
+              operator: In
+              values: [bootnode,swarm]
+      ports:
+        - protocol: TCP
+          port: 30399
+        - protocol: UDP
+          port: 30399
+{{- end }}
