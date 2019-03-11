@@ -475,27 +475,23 @@ kapacitor-importer:
     repository: "kapacitor"
     tag: "1.4"
     pullPolicy: "IfNotPresent"
-
   kapacitorURL: http://swarm-kapacitor:9092
-
-  # batchScripts:
-  #  # Example script
-  #  cpu_alert.tick: |-
-  #    dbrp "telegraf"."autogen"
-  #    batch
-  #        |query('''
-  #            SELECT mean(usage_idle)
-  #            FROM "telegraf"."autogen"."cpu"
-  #        ''')
-  #            .period(5m)
-  #            .every(5m)
-  #            .groupBy(time(1m), 'cpu')
-  #        |alert()
-  #            .crit(lambda: "mean" < 70)
-  #            .log('/tmp/batch_alerts.log')
-
-  # streamScripts:
-
+  batchScripts:
+    # Example script that logs a line into /tmp/alerts.log when
+    # a certain threashold of smoke tests failures is detected
+    smoke_upload_and_sync.tick: |-
+      dbrp "metrics"."autogen"
+      batch
+          |query('''
+              SELECT count("value")
+              FROM "metrics"."autogen"."swarm-smoke.upload-and-sync.fail.count"
+          ''')
+              .period(1h)
+              .every(1m)
+          |alert()
+              .crit(lambda: "count" >= 3)
+              .message('Smoke - Upload and sync failed {{index .Fields "count"}} times in the last hour')
+              .log('/tmp/alerts.log')
 
 
 ##
