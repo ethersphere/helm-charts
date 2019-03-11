@@ -115,7 +115,13 @@ jaeger:
       type: ClusterIP
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  resources: {}
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: 0.5
+    limits:
+      memory: 5Gi
+      cpu: 1
   ## Node labels and tolerations for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
@@ -133,7 +139,7 @@ influxdb:
   ## ref: https://hub.docker.com/r/library/influxdb/tags/
   image:
     repo: "influxdb"
-    tag: "1.6-alpine"
+    tag: "1.7.4-alpine"
     pullPolicy: IfNotPresent
 
   ## Specify a service type
