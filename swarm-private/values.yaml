@@ -412,8 +412,101 @@ influxdb:
       enabled: true
       run_interval: 1s
 
+##
+## Kapacitor dependency
+##
+kapacitor:
+  ## kapacitor image version
+  ## ref: https://hub.docker.com/r/library/kapacitor/tags/
+  ##
+  image:
+    repository: "kapacitor"
+    tag: "1.5.2-alpine"
+    pullPolicy: "IfNotPresent"
 
+  ## Specify a service type, defaults to NodePort
+  ## ref: http://kubernetes.io/docs/user-guide/services/
+  ##
+  service:
+    type: ClusterIP
 
+  ## Persist data to a persistent volume
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: false
+    ## kapacitor data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    # existingClaim: ""
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 0.1
+    limits:
+      memory: 512Mi
+      cpu: 0.5
+
+  ## Set the environment variables for kapacitor (or anything else you want to use)
+  ## ref: https://hub.docker.com/_/kapacitor/
+  envVars:
+    KAPACITOR_LOGGING_LEVEL: "ERROR"
+    KAPACITOR_REPORTING_ENABLED: "false"
+    KAPACITOR_INFLUXDB_0_USERNAME: "swarm"
+    KAPACITOR_INFLUXDB_0_PASSWORD: "swarm"
+  ## Set the URL of InfluxDB instance to create subscription on
+  ## ref: https://docs.influxdata.com/kapacitor/v1.1/introduction/getting_started/
+  ##
+  influxURL: http://swarm-influxdb:8086
+
+kapacitor-importer:
+  image:
+    repository: "kapacitor"
+    tag: "1.4"
+    pullPolicy: "IfNotPresent"
+  kapacitorURL: http://swarm-kapacitor:9092
+  batchScripts:
+    # Example script that logs a line into /tmp/alerts.log when
+    # a certain threashold of smoke tests failures is detected
+    smoke_upload_and_sync.tick: |-
+      dbrp "metrics"."autogen"
+      batch
+          |query('''
+              SELECT count("value")
+              FROM "metrics"."autogen"."swarm-smoke.upload-and-sync.fail.count"
+          ''')
+              .period(1h)
+              .every(1m)
+          |alert()
+              .crit(lambda: "count" >= 3)
+              .message('Smoke - Upload and sync failed {{index .Fields "count"}} times in the last hour')
+              .log('/tmp/alerts.log')
+    # Example script that logs a line into /tmp/alerts.log when
+    # fetching a file takes longer than 20 seconds.
+    smoke_fetch_download_time.tick: |-
+      dbrp "metrics"."autogen"
+      batch
+          |query('''
+              SELECT mean("max") / 1000000000
+              FROM "metrics"."autogen"."swarm-smoke.upload-and-sync.single.fetch-time.span"
+          ''')
+              .period(1h)
+              .every(1m)
+          |alert()
+              .crit(lambda: "mean" >= 20)
+              .message('Smoke - Fetch took {{index .Fields "mean"}}s on average over the last hour')
+              .log('/tmp/alerts.log')
 ##
 ## Grafana dependency
 ##
