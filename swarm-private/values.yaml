@@ -492,8 +492,21 @@ kapacitor-importer:
               .crit(lambda: "count" >= 3)
               .message('Smoke - Upload and sync failed {{index .Fields "count"}} times in the last hour')
               .log('/tmp/alerts.log')
-
-
+    # Example script that logs a line into /tmp/alerts.log when
+    # fetching a file takes longer than 20 seconds.
+    smoke_fetch_download_time.tick: |-
+      dbrp "metrics"."autogen"
+      batch
+          |query('''
+              SELECT mean("max") / 1000000000
+              FROM "metrics"."autogen"."swarm-smoke.upload-and-sync.single.fetch-time.span"
+          ''')
+              .period(1h)
+              .every(1m)
+          |alert()
+              .crit(lambda: "mean" >= 20)
+              .message('Smoke - Fetch took {{index .Fields "mean"}}s on average over the last hour')
+              .log('/tmp/alerts.log')
 ##
 ## Grafana dependency
 ##
