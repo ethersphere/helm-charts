@@ -44,7 +44,7 @@ spec:
           --verbosity={{ .Values.bootnode.config.verbosity }}
           --maxpeers=5000
           --nat=ip:$POD_IP
-          --port=30301
+          --port=30399
           --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
           --bootnodes=""
 {{- range $i, $flag := .Values.bootnode.config.extraFlags }}
@@ -66,7 +66,7 @@ spec:
               key: PASSWORD
         ports:
         - name: network
-          containerPort: 30301
+          containerPort: 30399
         volumeMounts:
         - name: keys
           mountPath: /keys
