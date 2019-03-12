@@ -59,7 +59,7 @@ spec:
           --maxpeers={{ .Values.swarm.config.maxpeers }}
           --ipcpath=bzzd.ipc
           --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
-          --bootnodes=enode://{{ .Values.bootnode.config.publicaddr }}@$BOOTNODE_IP:30301
+          --bootnodes=enode://{{ .Values.bootnode.config.publicaddr }}@$BOOTNODE_IP:30399
       {{- if .Values.swarm.config.debug }}
           --debug
       {{- end }}
