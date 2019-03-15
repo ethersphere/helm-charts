@@ -16,7 +16,7 @@ service:
 config:
   # Custom CLI args passed to Jaeger
   args:
-    - "--memory.max-traces=200000"
+    - "--memory.max-traces=100000"
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
