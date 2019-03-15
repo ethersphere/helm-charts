@@ -48,8 +48,8 @@ swarm:
     storesize: 100000
     # List of bootnodes. Example configuration:
     #bootnodes:
-    # - enode://xxxxxx@10.0.1.5:30301
-    # - enode://yyyyyy@10.0.1.7:30301
+    # - enode://xxxxxx@10.0.1.5:30399
+    # - enode://yyyyyy@10.0.1.7:30399
     bootnodes: []
     extraFlags: []
 
@@ -113,6 +113,10 @@ jaeger:
       type: ClusterIP
     agent:
       type: ClusterIP
+  config:
+    # Custom CLI args passed to Jaeger
+    args:
+      - "--memory.max-traces=100000"
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources:
