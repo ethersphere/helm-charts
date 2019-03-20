@@ -472,14 +472,14 @@ kapacitor:
   ## Set the URL of InfluxDB instance to create subscription on
   ## ref: https://docs.influxdata.com/kapacitor/v1.1/introduction/getting_started/
   ##
-  influxURL: http://swarm-influxdb:8086
+  influxURL: http://swarm-private-influxdb:8086
 
 kapacitor-importer:
   image:
     repository: "kapacitor"
     tag: "1.4"
     pullPolicy: "IfNotPresent"
-  kapacitorURL: http://swarm-kapacitor:9092
+  kapacitorURL: http://swarm-private-kapacitor:9092
   batchScripts:
     # Example script that logs a line into /tmp/alerts.log when
     # a certain threashold of smoke tests failures is detected
