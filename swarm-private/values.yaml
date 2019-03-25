@@ -694,6 +694,8 @@ grafana:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/swarm.json
       upload-speed:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/upload-speed.json
+      kad:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/kad.json
 
   ## Reference to external ConfigMap per provider. Use provider name as key and ConfiMap name as value.
   ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
