@@ -23,6 +23,7 @@ smoke:
   successfulJobsHistoryLimit: 3
   # How many failed jobs we should keep
   failedJobsHistoryLimit: 3
+  command: "/swarm-smoke"
   config:
     swarmReplicas: 5
     prefix: "swarm-private"
