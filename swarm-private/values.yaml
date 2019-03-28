@@ -688,6 +688,8 @@ grafana:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke.json
       smoke-sliding:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-sliding.json
+      smoke-pss:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-pss.json
       ldbstore:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/ldbstore.json
       swarm:
