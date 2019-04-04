@@ -1,5 +1,5 @@
 name: jaeger
-version: 0.0.3
+version: 0.0.4
 description: Jaeger all-in-one launches the Jaeger UI, collector, query, and agent, with an in memory storage component.
 keywords:
 - instrumentation
