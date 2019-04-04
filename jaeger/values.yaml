@@ -12,6 +12,8 @@ service:
     type: ClusterIP
   agent:
     type: ClusterIP
+  collector:
+    type: ClusterIP
 
 config:
   # Custom ENV and CLI args passed to Jaeger
