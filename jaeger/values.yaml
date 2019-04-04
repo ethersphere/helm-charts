@@ -14,7 +14,9 @@ service:
     type: ClusterIP
 
 config:
-  # Custom CLI args passed to Jaeger
+  # Custom ENV and CLI args passed to Jaeger
+  env:
+    SPAN_STORAGE_TYPE: memory
   args:
     - "--memory.max-traces=100000"
 

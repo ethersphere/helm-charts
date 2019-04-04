@@ -30,6 +30,11 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        env:
+        {{- range $key, $val := .Values.config.env }}
+          - name: {{ $key | quote}}
+            value: {{ $val | quote }}
+        {{- end }}
         args:
           - "--sampling.strategies-file=/etc/jaeger/sampling_strategies.json"
         {{- range .Values.config.args }}
