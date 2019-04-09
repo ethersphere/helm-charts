@@ -19,3 +19,7 @@ spec:
       port: 6831
       protocol: UDP
       targetPort: 6831
+    - name: agent-binary
+      port: 6832
+      protocol: UDP
+      targetPort: 6832

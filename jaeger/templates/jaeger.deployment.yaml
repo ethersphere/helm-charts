@@ -41,9 +41,29 @@ spec:
           - {{ . | quote }}
         {{- end }}
         ports:
-          - containerPort: 6831
+          # Agent ports
+          - name: agent-compact
+            containerPort: 6831
             protocol: UDP
-          - containerPort: 16686
+          - name: agent-binary
+            containerPort: 6832
+            protocol: UDP
+          - name: agent-config
+            containerPort: 5778
+            protocol: TCP
+          # Query ports
+          - name: query-http
+            containerPort: 16686
+            protocol: TCP
+          # Collector ports
+          - name: collector-grpc
+            containerPort: 14250
+            protocol: TCP
+          - name: collector-tchannel
+            containerPort: 14267
+            protocol: TCP
+          - name: collector-http-thrift
+            containerPort: 14268
             protocol: TCP
         readinessProbe:
           httpGet:
