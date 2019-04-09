@@ -98,6 +98,21 @@ swarm:
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: 20m
 
+  # Configuration for the tracing agent
+  tracingAgent:
+    # The agent will run within the Swarm pod
+    image:
+      repository: jaegertracing/jaeger-agent
+      tag: 1.11.0
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 0.1
+      limits:
+        memory: 64Mi
+        cpu: 0.1
+
 jaeger:
   image:
     repository: jaegertracing/all-in-one
