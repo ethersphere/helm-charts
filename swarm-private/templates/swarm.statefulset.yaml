@@ -74,7 +74,7 @@ spec:
       {{- end }}
       {{- if .Values.swarm.tracingEnabled }}
           --tracing
-          --tracing.endpoint={{ template "swarm.jaegerAgent.fullname" . }}:6831
+          --tracing.endpoint=127.0.0.1:6831
           --tracing.svc=$(POD_NAME)
       {{- end }}
       {{- if .Values.swarm.profilingEnabled }}
@@ -111,6 +111,16 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /root/.ethereum
+      {{- if .Values.swarm.tracingEnabled }}
+      - name: jaeger-agent
+        image: {{ .Values.swarm.tracingAgent.image.repository }}:{{ .Values.swarm.tracingAgent.image.tag }}
+        imagePullPolicy: {{ .Values.swarm.tracingAgent.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.swarm.tracingAgent.resources | indent 10 }}
+        args:
+          - --reporter.grpc.host-port={{ template "swarm.jaegerCollector.fullname" . }}:14250
+          - --reporter.grpc.retry.max=10
+      {{- end }}
       volumes:
 {{- if not .Values.swarm.persistence.enabled }}
       - name: data
