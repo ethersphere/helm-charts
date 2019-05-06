@@ -1,7 +1,7 @@
 dependencies:
 - name: influxdb
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 0.11.0
+  version: 1.1.4
 - name: kapacitor
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 1.1.1
@@ -14,5 +14,5 @@ dependencies:
 - name: jaeger
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
   version: 0.0.4
-digest: sha256:776061f62b67c362408be19748989adf69bf293af108f99e61d468a2d1afed69
-generated: 2019-04-09T13:22:07.818252235+02:00
+digest: sha256:3c77c56d7b0bed4237798677f2035694ac8414d1bc5f9ae047f8029076771593
+generated: 2019-05-06T12:44:05.781053573+02:00

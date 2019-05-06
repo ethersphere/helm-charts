@@ -309,8 +309,6 @@ influxdb:
   ## configure certain parts of the server.
   ## Ref: https://hub.docker.com/_/influxdb/
   env:
-  - name: INFLUXDB_DB
-    value: "metrics"
   - name: INFLUXDB_LOGGING_LEVEL
     value: "warn"
   ## Change InfluxDB configuration parameters below:
@@ -432,6 +430,17 @@ influxdb:
       log_enabled: true
       enabled: true
       run_interval: 1s
+
+  # Allow executing custom init scripts
+  #
+  # If the container finds any files with the extensions .sh or .iql inside of the
+  # /docker-entrypoint-initdb.d folder, it will execute them. The order they are
+  # executed in is determined by the shell. This is usually alphabetical order.
+  initScripts:
+    enabled: true
+    scripts:
+      init.iql: |+
+        CREATE DATABASE "metrics" WITH DURATION 30d REPLICATION 1 NAME "autogen"
 
 ##
 ## Kapacitor dependency
