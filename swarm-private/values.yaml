@@ -712,16 +712,26 @@ grafana:
     default:
       smoke:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke.json
-      smoke-sliding:
-        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-sliding.json
       ldbstore:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/ldbstore.json
       swarm:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/swarm.json
       upload-speed:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/upload-speed.json
+      sliding:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-sliding.json
       kad:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/kad.json
+      fetchers:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/fetchers.json
+      timeouts:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/timeouts.json
+      p2p:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/p2p.json
+      pushsync:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/pushsync.json
+      runtime:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/runtime.json
 
   ## Reference to external ConfigMap per provider. Use provider name as key and ConfiMap name as value.
   ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
