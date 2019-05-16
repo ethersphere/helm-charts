@@ -45,6 +45,8 @@ geth:
     wsapi: eth,net,web3,txpool
     # Origins from which to accept websockets requests
     wsorigins: "*"
+    # Additional custom flags
+    extraFlags: []
   persistence:
     ## this enables PVC templates that will create one per pod
     enabled: false

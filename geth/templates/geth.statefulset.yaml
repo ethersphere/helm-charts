@@ -52,6 +52,9 @@ spec:
         {{- if .Values.ethstats.enabled }}
         - --ethstats=$(POD_NAME):$(ETHSTATS_SECRET)@$(ETHSTATS_SVC)
         {{- end }}
+{{- range $i, $flag := .Values.geth.config.extraFlags }}
+        - {{ $flag }}
+{{- end }}
         env:
         - name: POD_NAME
           valueFrom:
