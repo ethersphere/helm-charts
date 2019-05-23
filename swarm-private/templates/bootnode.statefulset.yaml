@@ -27,6 +27,18 @@ spec:
 {{ toYaml .Values.bootnode.podAnnotations | indent 8 }}
         {{- end }}
     spec:
+{{- with .Values.bootnode.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.bootnode.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.bootnode.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
       - name: bootnode
         image: {{ .Values.bootnode.image.repository }}:{{ .Values.bootnode.image.tag }}
@@ -102,16 +114,4 @@ spec:
       storageClassName: "{{ .Values.bootnode.persistence.storageClass }}"
     {{- end }}
   {{- end }}
-{{- end }}
-{{- with .Values.bootnode.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.bootnode.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.bootnode.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
 {{- end }}
