@@ -30,6 +30,18 @@ spec:
 {{ toYaml .Values.swarm.podAnnotations | indent 8 }}
         {{- end }}
     spec:
+{{- with .Values.swarm.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.swarm.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.swarm.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       serviceAccountName: {{ template "swarm.fullname" . }}
       terminationGracePeriodSeconds: {{ .Values.swarm.terminationGracePeriodSeconds }}
       initContainers:
@@ -181,16 +193,4 @@ spec:
       storageClassName: "{{ .Values.swarm.persistence.storageClass }}"
     {{- end }}
   {{- end }}
-{{- end }}
-{{- with .Values.swarm.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.swarm.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.swarm.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
 {{- end }}
