@@ -23,6 +23,18 @@ spec:
         release: {{ .Release.Name }}
         component: geth
     spec:
+{{- with .Values.geth.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.geth.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.geth.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
       - name: geth
         image: {{ .Values.geth.image.repository }}:{{ .Values.geth.image.tag }}
@@ -110,16 +122,4 @@ spec:
       storageClassName: "{{ .Values.geth.persistence.storageClass }}"
     {{- end }}
   {{- end }}
-{{- end }}
-{{- with .Values.geth.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.geth.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.geth.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
 {{- end }}
