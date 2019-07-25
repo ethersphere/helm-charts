@@ -1,5 +1,5 @@
 name: swarm-private
-version: 0.0.3
+version: 0.0.4
 description: Create a private ethereum swarm cluster
 keywords:
 - ethereum
