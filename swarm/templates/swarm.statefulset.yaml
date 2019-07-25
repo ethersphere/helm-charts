@@ -70,10 +70,11 @@ spec:
         - >
           source /env/swarm.env;
         {{- if .Values.swarm.metricsEnabled }}
-          export BZZKEY=$(sh /run.sh print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
-          export PUBKEY=$(sh /run.sh print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
+          export BZZKEY=$(sh swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
+          export PUBKEY=$(sh swarm --password /keys/bzzaccount.password print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
         {{- end }}
-          /run.sh
+          swarm
+          --password /keys/bzzaccount.password
           --ens-api={{ .Values.swarm.config.ens_api }}
           --port=$NODEPORT
           --bzzport=8500
@@ -123,11 +124,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "swarm.fullname" . }}
-              key: PASSWORD
         ports:
         - name: bzz-http
           containerPort: 8500
@@ -138,6 +134,9 @@ spec:
           containerPort: 6060
         {{- end }}
         volumeMounts:
+        - name: keys
+          mountPath: /keys
+          readOnly: true
         - name: data
           mountPath: /root/.ethereum
         - name: envshare
@@ -164,6 +163,9 @@ spec:
           - --reporter.grpc.retry.max=10
       {{- end }}
       volumes:
+      - name: keys
+        secret:
+          secretName: {{ template "swarm.fullname" . }}
       - name: scripts
         configMap:
           name: {{ template "swarm.fullname" . }}-scripts

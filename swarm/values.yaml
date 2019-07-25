@@ -12,7 +12,7 @@ swarm:
   profilingEnabled: false
   # Image configuration
   image:
-    repository: ethdevops/swarm
+    repository: ethersphere/swarm
     tag: latest
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'

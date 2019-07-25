@@ -49,9 +49,10 @@ spec:
         - sh
         - -ac
         - >
-          /run.sh
+          swarm
           --debug
           --bootnode-mode
+          --password /keys/bzzaccount.password
           --nodekey=/keys/bootnode.key
           --verbosity={{ .Values.bootnode.config.verbosity }}
           --maxpeers=5000
@@ -71,11 +72,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "swarm.fullname" . }}
-              key: PASSWORD
         ports:
         - name: network
           containerPort: 30399
