@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "ganache.fullname" . }}
+  labels:
+    app: {{ template "ganache.name" . }}
+    chart: {{ template "ganache.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  serviceName: {{ template "ganache.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "ganache.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ganache.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+{{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+      containers:
+      - name: ganache
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        args:
+        - --host=0.0.0.0
+        - --db=/data
+{{- range $i, $account := .Values.config.accounts }}
+        - --account="{{ $account.privKey }},{{ $account.wei }}"
+{{- end }}
+{{- range $i, $flag := .Values.config.args }}
+        - {{ $flag }}
+{{- end }}
+        ports:
+        - name: rpc
+          containerPort: 8545
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+{{- if not .Values.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "ganache.name" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+  {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
+{{- end }}

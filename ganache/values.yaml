@@ -1,0 +1,67 @@
+# Default values for ganache.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: trufflesuite/ganache-cli
+  tag: v6.6.0
+## Specify a imagePullPolicy
+## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+##
+imagePullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+
+config:
+  accounts:
+    - addr: "0xcD604B06F0A015269b34c2a8DC8C779535c24B2f"
+      privKey: "0xee57faecd3507232bf794e4c3689e9329d89d5720fb979a07910e426b0da6ca2"
+      wei: "100000000000000000000" # 100 ETH
+    - addr: "0xc029885FCeedD27623f3293cD892460B528e33E2"
+      privKey: "0x0eb6d5457d6a01699c577df6567f63dcad0fdbacc52c3fe85e8dfce86f2a204a"
+      wei: "100000000000000000000" # 100 ETH
+    - addr: "0xDCD36E29Ed55a66F6A3dB114dFcDe7ef1Fb4b346"
+      privKey: "0xa15672ac5fa96bf19f15613d60b4a4982ed97cf1a736dc71557b64e7b9363bbc"
+      wei: "100000000000000000000" # 100 ETH
+    - addr: "0x894A9BfAf6dFe917F0F61bbDcC3096Cd5eA77F2A"
+      privKey: "0x976aa1879c686733d07e9201d3a62ad95dcf78b1e438f2b74939bf7a7cd432f9"
+      wei: "100000000000000000000" # 100 ETH
+    - addr: "0x666f30fD950Cc8A8Db93f9C7d86Bb0B14cb1773A"
+      privKey: "0x3f389096dc9ddd64066e0336c5da827101daa03e2ecf5873de464be3e69327f5"
+      wei: "100000000000000000000" # 100 ETH
+    - addr: "0xCD51767481E08aa21eF38Ff346726b61521A3D37"
+      privKey: "0x03e926dcc0739df9df1a34844c0c1e6b88f65384cc5903fca9b5d3832f4f6efd"
+      wei: "100000000000000000000" # 100 ETH
+  args:
+    - "--keepAliveTimeout=5000"
+
+persistence:
+  ## this enables PVC templates that will create one per pod
+  enabled: false
+  ## ganache data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 20Gi
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+resources: {}
+  #requests:
+  #  memory: 4Gi
+  #  cpu: 0.5
+  #limits:
+  #  memory: 5Gi
+  #  cpu: 1
+## Node labels and tolerations for pod assignment
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
+nodeSelector: {}
+tolerations: []
+affinity: {}
