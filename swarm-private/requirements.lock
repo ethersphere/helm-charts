@@ -10,9 +10,9 @@ dependencies:
   version: 0.0.1
 - name: grafana
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 1.14.8
+  version: 3.8.3
 - name: jaeger
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
   version: 0.0.4
-digest: sha256:3c77c56d7b0bed4237798677f2035694ac8414d1bc5f9ae047f8029076771593
-generated: 2019-05-06T12:44:05.781053573+02:00
+digest: sha256:0309f0a8e422089877b53cc39249f1ff552e03fd33ac1fffec62fb5f7531dd18
+generated: "2019-08-19T11:25:44.152978017+02:00"
