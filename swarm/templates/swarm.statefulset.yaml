@@ -70,8 +70,8 @@ spec:
         - >
           source /env/swarm.env;
         {{- if .Values.swarm.metricsEnabled }}
-          export BZZKEY=$(sh swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
-          export PUBKEY=$(sh swarm --password /keys/bzzaccount.password print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
+          export BZZKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
+          export PUBKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
         {{- end }}
           swarm
           --password /keys/bzzaccount.password
