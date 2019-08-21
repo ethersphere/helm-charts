@@ -203,8 +203,11 @@ influxdb:
   ## ref: https://hub.docker.com/r/library/influxdb/tags/
   image:
     repo: "influxdb"
-    tag: "1.7.4-alpine"
+    tag: "1.7.6-alpine"
     pullPolicy: IfNotPresent
+    ## If specified, use these secrets to access the images
+    # pullSecrets:
+    #   - registry-secret
 
   ## Specify a service type
   ## ref: http://kubernetes.io/docs/user-guide/services/
@@ -281,10 +284,10 @@ influxdb:
   resources:
     requests:
       memory: 256Mi
-      cpu: 0.1
+      cpu: null
     limits:
       memory: 16Gi
-      cpu: 8
+      cpu: null
 
   ingress:
     enabled: false
@@ -305,6 +308,20 @@ influxdb:
   ##
   nodeSelector: {}
 
+  ## Affinity for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+
+  ## Tolerations for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
+  # - key: "key"
+  #   operator: "Equal|Exists"
+  #   value: "value"
+  #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
+
   ## The InfluxDB image uses several environment variables to automatically
   ## configure certain parts of the server.
   ## Ref: https://hub.docker.com/_/influxdb/
@@ -316,8 +333,11 @@ influxdb:
   ## ref: https://docs.influxdata.com/influxdb/v1.1/administration/config/
   config:
     reporting_disabled: false
-    bind_address: 8088
+    
     storage_directory: /var/lib/influxdb
+    rpc:
+      enabled: true
+      bind_address: 8088
     meta:
       retention_autocreate: true
       logging_enabled: true
@@ -365,6 +385,7 @@ influxdb:
       enabled: true
       bind_address: 8086
       auth_enabled: false
+      flux_enabled: true
       log_enabled: false
       write_tracing: false
       pprof_enabled: true
@@ -430,6 +451,10 @@ influxdb:
       log_enabled: true
       enabled: true
       run_interval: 1s
+    logging:
+      format: auto
+      level: info
+      supress_logo: false
 
   # Allow executing custom init scripts
   #
@@ -441,6 +466,15 @@ influxdb:
     scripts:
       init.iql: |+
         CREATE DATABASE "metrics" WITH DURATION 30d REPLICATION 1 NAME "autogen"
+
+  backup:
+    enabled: false
+    schedule: "0 0 * * *"
+    annotations: {}
+    destination: gs://bucket/influxdb
+    # Google Cloud Storage
+    gcs:
+      serviceAccountSecret: influxdb-backup-key
 
 ##
 ## Kapacitor dependency
