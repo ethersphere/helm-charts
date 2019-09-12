@@ -92,6 +92,13 @@ swarm:
     # LevelDB Store size - by default 4kb * 10^5 == 400 megabytes
     storesize: 100000
     extraFlags: []
+    # Pod specific flags (Key: Pod name, Value: flags)
+    # With this you can provide certain pods with flags without applying it to all the others.
+    # Important: These flags will be visible under the /flags/ directory on all your pods.
+    #            Be careful if you use this to provide secret information. All pods can see the flags.
+    podSpecificFlags: {}
+      # swarm-private-0: --store.cache.size=10000 --maxpeers=100
+      # swarm-private-5: --maxpeers=60
   secrets:
      # Used to setup a sample Ethereum account in the data directory.
      # If a data directory is mounted with a volume, the first Ethereum account from it

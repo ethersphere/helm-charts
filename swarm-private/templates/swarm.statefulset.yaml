@@ -53,6 +53,7 @@ spec:
         - sh
         - -ac
         - >
+          export POD_FLAGS=$(cat "/flags/$POD_NAME")
           export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode | grep Address | awk '{ print $3 }') &&
         {{- if .Values.swarm.metricsEnabled }}
           export BZZKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
@@ -98,6 +99,7 @@ spec:
 {{- range $i, $flag := .Values.swarm.config.extraFlags }}
           {{ $flag }}
 {{- end }}
+          $POD_FLAGS
         env:
         - name: POD_NAME
           valueFrom:
@@ -120,6 +122,9 @@ spec:
         - name: keys
           mountPath: /keys
           readOnly: true
+        - name: flags
+          mountPath: /flags
+          readOnly: true
         - name: data
           mountPath: /root/.ethereum
       {{- if .Values.swarm.tracingEnabled }}
@@ -133,6 +138,9 @@ spec:
           - --reporter.grpc.retry.max=10
       {{- end }}
       volumes:
+      - name: flags
+        configMap:
+          name: {{ template "swarm.fullname" . }}-podflags
       - name: keys
         secret:
           secretName: {{ template "swarm.fullname" . }}
