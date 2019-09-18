@@ -1,4 +1,9 @@
 dependencies:
+  # Blockchain
+  - name: "ganache"
+    version: 0.0.1
+    condition: swarm.ganacheEnabled
+    repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
   # Metrics
   - name: "influxdb"
     version: 1.3.2
