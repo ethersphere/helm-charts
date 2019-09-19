@@ -35,6 +35,7 @@ spec:
 {{- with .Values.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
+{{- end }}
       containers:
       - name: jaeger
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
