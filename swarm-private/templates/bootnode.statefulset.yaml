@@ -60,6 +60,11 @@ spec:
           --port=30399
           --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
           --bootnodes=""
+      {{- if .Values.swarm.tracingEnabled }}
+          --tracing
+          --tracing.endpoint=127.0.0.1:6831
+          --tracing.svc=$(POD_NAME)
+      {{- end }}
 {{- range $i, $flag := .Values.bootnode.config.extraFlags }}
           {{ $flag }}
 {{- end }}
