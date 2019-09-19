@@ -54,27 +54,27 @@ spec:
         {{- end }}
         ports:
           # Agent ports
-          - name: agent-compact
+          - name: a-compact
             containerPort: 6831
             protocol: UDP
-          - name: agent-binary
+          - name: a-binary
             containerPort: 6832
             protocol: UDP
-          - name: agent-config
+          - name: a-config
             containerPort: 5778
             protocol: TCP
           # Query ports
-          - name: query-http
+          - name: q-http
             containerPort: 16686
             protocol: TCP
           # Collector ports
-          - name: collector-grpc
+          - name: c-grpc
             containerPort: 14250
             protocol: TCP
-          - name: collector-tchannel
+          - name: c-tchannel
             containerPort: 14267
             protocol: TCP
-          - name: collector-http-thrift
+          - name: c-http-thrift
             containerPort: 14268
             protocol: TCP
         readinessProbe:
