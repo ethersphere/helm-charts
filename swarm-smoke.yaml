@@ -15,7 +15,7 @@ smoke:
   # Schedule is a cron format string that defines when a job is to be created and executed.
   # https://en.wikipedia.org/wiki/Cron
   # The default is every 5 minutes
-  schedule: "*/2 * * * *"
+  schedule: "*/3 * * * *"
   # concurrencyPolicy can be "Allow", "Forbid" or "Replace"
   # https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy
   concurrencyPolicy: Forbid
@@ -35,9 +35,10 @@ smoke:
     extraFlags:
       - --single
       - --http-port=8500
-      - --filesize=50
+      - --filesize=800
       - --sync-delay=30
-      - --timeout=10
+      - --timeout=120
+      - --verbosity=3
 
   ## Configure resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/

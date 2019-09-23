@@ -4,7 +4,7 @@ swarm:
   profilingEnabled: false
   image:
     repository: ethdevops/swarm
-    tag: fabio 
+    tag: incentives 
   replicaCount: 30 
   podManagementPolicy: Parallel
   config:
@@ -20,6 +20,8 @@ swarm:
       - --wsapi=admin,debug,bzz,stream
       - --wsorigins=*
       - --sync-update-delay="5s"
+      - --swap
+      - --swap-api=""
   secrets:
     password: qwerty
   persistence:
