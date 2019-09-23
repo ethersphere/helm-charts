@@ -22,13 +22,23 @@ spec:
         app: {{ template "swarm.name" . }}
         release: {{ .Release.Name }}
         component: bootnode
-    {{- if or (eq .Values.bootnode.image.tag "latest") (eq .Values.bootnode.image.tag "edge") }}
+        {{- if .Values.bootnode.podAnnotations }}
       annotations:
-        # Note: 'latest' or 'edge' tag is beeing used, therefore we keep changing
-        # this annotation to force a redeployment of the pods within the StatefulSet
-        "release-timestamp": {{.Release.Time.Seconds | quote }}
-    {{- end }}
+{{ toYaml .Values.bootnode.podAnnotations | indent 8 }}
+        {{- end }}
     spec:
+{{- with .Values.bootnode.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.bootnode.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.bootnode.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
       - name: bootnode
         image: {{ .Values.bootnode.image.repository }}:{{ .Values.bootnode.image.tag }}
@@ -39,16 +49,22 @@ spec:
         - sh
         - -ac
         - >
-          /run.sh
+          swarm
           --debug
           --bootnode-mode
+          --password /keys/bzzaccount.password
           --nodekey=/keys/bootnode.key
           --verbosity={{ .Values.bootnode.config.verbosity }}
           --maxpeers=5000
           --nat=ip:$POD_IP
-          --port=30301
+          --port=30399
           --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
           --bootnodes=""
+      {{- if .Values.swarm.tracingEnabled }}
+          --tracing
+          --tracing.endpoint=127.0.0.1:6831
+          --tracing.svc=$(POD_NAME)
+      {{- end }}
 {{- range $i, $flag := .Values.bootnode.config.extraFlags }}
           {{ $flag }}
 {{- end }}
@@ -61,31 +77,42 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "swarm.fullname" . }}
-              key: PASSWORD
         ports:
         - name: network
-          containerPort: 30301
+          containerPort: 30399
         volumeMounts:
         - name: keys
           mountPath: /keys
           readOnly: true
+        - name: data
+          mountPath: /root/.ethereum
       volumes:
       - name: keys
         secret:
           secretName: {{ template "swarm.fullname" . }}-bootnode
-{{- with .Values.bootnode.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.bootnode.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.bootnode.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
+{{- if not .Values.bootnode.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+{{- else }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ template "swarm.name" . }}
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+        component: bootnode
+    spec:
+      accessModes:
+        - {{ .Values.bootnode.persistence.accessMode | quote }}
+      resources:
+          requests:
+            storage: {{ .Values.bootnode.persistence.size | quote }}
+  {{- if .Values.bootnode.persistence.storageClass }}
+    {{- if (eq "-" .Values.bootnode.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.bootnode.persistence.storageClass }}"
+    {{- end }}
+  {{- end }}
 {{- end }}

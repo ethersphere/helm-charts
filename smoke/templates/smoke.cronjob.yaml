@@ -15,8 +15,18 @@ spec:
   failedJobsHistoryLimit: {{ $root.Values.smoke.failedJobsHistoryLimit }}
   concurrencyPolicy: {{ $root.Values.smoke.concurrencyPolicy | quote }}
   jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "smoke.name" $root }}
+        chart: {{ template "smoke.chart" . }}
+        release: {{ .Release.Name }}
     spec:
       template:
+        metadata:
+          labels:
+            app: {{ template "smoke.name" $root }}
+            chart: {{ template "smoke.chart" . }}
+            release: {{ .Release.Name }}
         spec:
           containers:
           - name: smoke
@@ -27,7 +37,6 @@ spec:
 {{ toYaml .Values.smoke.resources | indent 14 }}
             args:
             - --hosts={{- range $i, $e := until (int $root.Values.smoke.config.swarmReplicas) }}{{if ne $i 0}},{{end}}{{ $root.Values.smoke.config.prefix }}-{{ $i }}.{{ $root.Values.smoke.config.suffix }}{{- end }}
-            - --verbosity=5
             - --metrics
             - --metrics.influxdb.endpoint={{ .Values.smoke.config.influxdbEndpoint }}
             - --metrics.influxdb.username={{ .Values.smoke.config.influxdbUsername }}

@@ -1,12 +1,21 @@
 dependencies:
+- name: ganache
+  repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
+  version: 0.0.1
 - name: influxdb
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 0.11.0
+  version: 1.3.2
+- name: kapacitor
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 1.1.1
+- name: kapacitor-importer
+  repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
+  version: 0.0.1
 - name: grafana
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 1.14.8
+  version: 3.8.3
 - name: jaeger
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
-  version: 0.0.2
-digest: sha256:5fa6535368947b047e643803c0ecea2e5e390b13e43b8c40b86111c9894b78ec
-generated: 2019-01-23T14:29:22.97397836+01:00
+  version: 0.0.7
+digest: sha256:9a2a9be919235bd21d787e8edcc82668eb42979ef7970ed7ccd2b42fd945bc3f
+generated: "2019-09-19T16:50:04.280581078+02:00"

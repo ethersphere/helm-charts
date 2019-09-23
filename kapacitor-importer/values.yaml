@@ -1,0 +1,24 @@
+image:
+  repository: "kapacitor"
+  tag: "1.4"
+  pullPolicy: "IfNotPresent"
+
+kapacitorURL: http://kapacitor:9092
+
+# batchScripts:
+#  # Example script
+#  cpu_alert.tick: |-
+#    dbrp "telegraf"."autogen"
+#    batch
+#        |query('''
+#            SELECT mean(usage_idle)
+#            FROM "telegraf"."autogen"."cpu"
+#        ''')
+#            .period(5m)
+#            .every(5m)
+#            .groupBy(time(1m), 'cpu')
+#        |alert()
+#            .crit(lambda: "mean" < 70)
+#            .log('/tmp/batch_alerts.log')
+
+# streamScripts:

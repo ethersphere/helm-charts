@@ -25,13 +25,23 @@ spec:
         app: {{ template "swarm.name" . }}
         release: {{ .Release.Name }}
         component: swarm
-    {{- if or (eq .Values.swarm.image.tag "latest") (eq .Values.swarm.image.tag "edge") }}
+        {{- if .Values.swarm.podAnnotations }}
       annotations:
-        # Note: 'latest' or 'edge' tag is beeing used, therefore we keep changing
-        # this annotation to force a redeployment of the pods within the StatefulSet
-        "release-timestamp": {{.Release.Time.Seconds | quote }}
-    {{- end }}
+{{ toYaml .Values.swarm.podAnnotations | indent 8 }}
+        {{- end }}
     spec:
+{{- with .Values.swarm.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.swarm.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.swarm.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       serviceAccountName: {{ template "swarm.fullname" . }}
       terminationGracePeriodSeconds: {{ .Values.swarm.terminationGracePeriodSeconds }}
       initContainers:
@@ -60,10 +70,11 @@ spec:
         - >
           source /env/swarm.env;
         {{- if .Values.swarm.metricsEnabled }}
-          export BZZKEY=$(sh /run.sh print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
-          export PUBKEY=$(sh /run.sh print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
+          export BZZKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
+          export PUBKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
         {{- end }}
-          /run.sh
+          swarm
+          --password /keys/bzzaccount.password
           --ens-api={{ .Values.swarm.config.ens_api }}
           --port=$NODEPORT
           --bzzport=8500
@@ -93,7 +104,7 @@ spec:
           {{- end }}
           {{- if .Values.swarm.tracingEnabled }}
           --tracing
-          --tracing.endpoint={{ template "swarm.jaegerAgent.fullname" . }}:6831
+          --tracing.endpoint=127.0.0.1:6831
           --tracing.svc=$(POD_NAME)
           {{- end }}
           {{- if .Values.swarm.profilingEnabled }}
@@ -113,11 +124,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
-        - name: PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "swarm.fullname" . }}
-              key: PASSWORD
         ports:
         - name: bzz-http
           containerPort: 8500
@@ -128,6 +134,9 @@ spec:
           containerPort: 6060
         {{- end }}
         volumeMounts:
+        - name: keys
+          mountPath: /keys
+          readOnly: true
         - name: data
           mountPath: /root/.ethereum
         - name: envshare
@@ -143,7 +152,20 @@ spec:
         - name: envshare
           mountPath: /env
           readOnly: true
+      {{- if .Values.swarm.tracingEnabled }}
+      - name: jaeger-agent
+        image: {{ .Values.swarm.tracingAgent.image.repository }}:{{ .Values.swarm.tracingAgent.image.tag }}
+        imagePullPolicy: {{ .Values.swarm.tracingAgent.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.swarm.tracingAgent.resources | indent 10 }}
+        args:
+          - --reporter.grpc.host-port={{ template "swarm.jaegerCollector.fullname" . }}:14250
+          - --reporter.grpc.retry.max=10
+      {{- end }}
       volumes:
+      - name: keys
+        secret:
+          secretName: {{ template "swarm.fullname" . }}
       - name: scripts
         configMap:
           name: {{ template "swarm.fullname" . }}-scripts
@@ -173,16 +195,4 @@ spec:
       storageClassName: "{{ .Values.swarm.persistence.storageClass }}"
     {{- end }}
   {{- end }}
-{{- end }}
-{{- with .Values.swarm.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.swarm.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-{{- end }}
-{{- with .Values.swarm.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
 {{- end }}

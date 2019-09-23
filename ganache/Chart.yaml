@@ -1,0 +1,15 @@
+name: ganache
+version: 0.0.1
+description: Run an ethereum blockchain for testing purposes
+keywords:
+- ethereum
+- testing
+- blockchain
+home: https://www.trufflesuite.com/ganache
+sources:
+- https://github.com/trufflesuite/ganache
+maintainers:
+- name: skylenet
+  email: rafael@ethereum.org
+icon: https://www.trufflesuite.com/img/ganache-logo-dark.svg
+appVersion: dev

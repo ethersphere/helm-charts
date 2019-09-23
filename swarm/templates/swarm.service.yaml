@@ -69,5 +69,9 @@ spec:
   ports:
   - name: http-interface
     port: 8500
+  {{- if $root.Values.swarm.ingress.exposeWebsocketRPC }}
+  - name: ws-rpc
+    port: 8546
+  {{- end }}
 
 {{- end }}

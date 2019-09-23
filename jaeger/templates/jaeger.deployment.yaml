@@ -24,21 +24,61 @@ spec:
         release: {{ .Release.Name }}
         component: jaeger
     spec:
+{{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
       - name: jaeger
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        env:
+        {{- range $key, $val := .Values.config.env }}
+          - name: {{ $key | quote}}
+            value: {{ $val | quote }}
+        {{- end }}
+        args:
+          - "--sampling.strategies-file=/etc/jaeger/sampling_strategies.json"
+        {{- range .Values.config.args }}
+          - {{ . | quote }}
+        {{- end }}
         ports:
-          - containerPort: 6831
+          # Agent ports
+          - name: a-compact
+            containerPort: 6831
             protocol: UDP
-          - containerPort: 16686
+          - name: a-binary
+            containerPort: 6832
+            protocol: UDP
+          - name: a-config
+            containerPort: 5778
+            protocol: TCP
+          # Query ports
+          - name: q-http
+            containerPort: 16686
+            protocol: TCP
+          # Collector ports
+          - name: c-grpc
+            containerPort: 14250
+            protocol: TCP
+          - name: c-tchannel
+            containerPort: 14267
+            protocol: TCP
+          - name: c-http-thrift
+            containerPort: 14268
             protocol: TCP
         readinessProbe:
           httpGet:
             path: "/"
             port: 14269
           initialDelaySeconds: 5
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}

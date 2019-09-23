@@ -16,4 +16,4 @@ spec:
   clusterIP: None
   ports:
   - name: network
-    port: 30301
+    port: 30399

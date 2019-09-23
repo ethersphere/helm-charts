@@ -60,5 +60,11 @@ spec:
         backend:
           serviceName: {{ template "swarm.fullname" $root }}-internal-{{ $i }}
           servicePort: 8500
+    {{- if $root.Values.swarm.ingress.exposeWebsocketRPC }}
+      - path: /wsrpc
+        backend:
+          serviceName: {{ template "swarm.fullname" $root }}-internal-{{ $i }}
+          servicePort: 8546
+    {{- end }}
 {{- end }}
 {{- end }}
