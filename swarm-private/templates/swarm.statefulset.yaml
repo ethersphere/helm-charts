@@ -53,7 +53,7 @@ spec:
         - sh
         - -ac
         - >
-          export POD_FLAGS=$(cat "/flags/$POD_NAME")
+          export POD_FLAGS=$(cat "/flags/$POD_NAME") &&
           export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode | grep Address | awk '{ print $3 }') &&
         {{- if .Values.swarm.metricsEnabled }}
           export BZZKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
