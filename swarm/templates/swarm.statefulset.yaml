@@ -69,6 +69,10 @@ spec:
         - -ac
         - >
           source /env/swarm.env;
+          export POD_FLAGS=$(cat "/flags/$POD_NAME") &&
+        {{- if .Values.bootnode.enabled }}
+          export BOOTNODE_IP=$(nslookup {{ template "swarm.fullname" . }}-bootnode | grep Address | awk '{ print $3 }') &&
+        {{- end }}
         {{- if .Values.swarm.metricsEnabled }}
           export BZZKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
           export PUBKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep publicKey= | cut -d '=' -f2 | cut -c1-10) &&
@@ -82,16 +86,16 @@ spec:
           --corsdomain=*
           --httpaddr=0.0.0.0
           --wsport=8546
+          --nat=extip:$PUBLIC_IP
           --verbosity={{ .Values.swarm.config.verbosity }}
           --maxpeers={{ .Values.swarm.config.maxpeers }}
           --ipcpath=bzzd.ipc
+          --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
+          {{- if .Values.bootnode.enabled }}
+          --bootnodes=enode://{{ .Values.bootnode.config.publicaddr }}@$BOOTNODE_IP:30399
+          {{- end }}
           {{- if .Values.swarm.config.debug }}
           --debug
-          {{- end }}
-          --bzznetworkid={{ .Values.swarm.config.bzznetworkid }}
-          --nat=extip:$PUBLIC_IP
-          {{- if gt (len .Values.swarm.config.bootnodes) 0 }}
-          --bootnodes={{- range $i, $b := .Values.swarm.config.bootnodes }}{{if ne $i 0}},{{end}}{{ $b }}{{- end }}
           {{- end }}
           {{- if .Values.swarm.metricsEnabled }}
           --metrics
@@ -115,6 +119,7 @@ spec:
 {{- range $i, $flag := .Values.swarm.config.extraFlags }}
           {{ $flag }}
 {{- end }}
+          $POD_FLAGS
         env:
         - name: POD_NAME
           valueFrom:
@@ -142,6 +147,9 @@ spec:
         - name: envshare
           mountPath: /env
           readOnly: true
+        - name: flags
+          mountPath: /flags
+          readOnly: true
       - name: proxy
         image: alpine/socat:1.0.3
         command: [ "sh", "-c", "source /env/swarm.env; exec socat tcp-listen:30399,reuseaddr,fork tcp:localhost:$NODEPORT"]
@@ -163,6 +171,9 @@ spec:
           - --reporter.grpc.retry.max=10
       {{- end }}
       volumes:
+      - name: flags
+        configMap:
+          name: {{ template "swarm.fullname" . }}-podflags
       - name: keys
         secret:
           secretName: {{ template "swarm.fullname" . }}
