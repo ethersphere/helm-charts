@@ -52,6 +52,13 @@ swarm:
     # - enode://yyyyyy@10.0.1.7:30399
     bootnodes: []
     extraFlags: []
+    # Pod specific flags (Key: Pod name, Value: flags)
+    # With this you can provide certain pods with flags without applying it to all the others.
+    # Important: These flags will be visible under the /flags/ directory on all your pods.
+    #            Be careful if you use this to provide secret information. All pods can see the flags.
+    podSpecificFlags: {}
+      # swarm-0: --store.cache.size=10000 --maxpeers=100
+      # swarm-5: --maxpeers=60
 
   secrets:
      # Used to setup a sample Ethereum account in the data directory.
@@ -290,7 +297,7 @@ influxdb:
   ## ref: https://docs.influxdata.com/influxdb/v1.1/administration/config/
   config:
     reporting_disabled: false
-    
+
     storage_directory: /var/lib/influxdb
     rpc:
       enabled: true

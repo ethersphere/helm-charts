@@ -68,6 +68,7 @@ spec:
         - sh
         - -ac
         - >
+          export POD_FLAGS=$(cat "/flags/$POD_NAME")
           source /env/swarm.env;
         {{- if .Values.swarm.metricsEnabled }}
           export BZZKEY=$(swarm --password /keys/bzzaccount.password print-keys | grep bzzkey=    | cut -d '=' -f2 | cut -c1-7) &&
@@ -115,6 +116,7 @@ spec:
 {{- range $i, $flag := .Values.swarm.config.extraFlags }}
           {{ $flag }}
 {{- end }}
+          $POD_FLAGS
         env:
         - name: POD_NAME
           valueFrom:
@@ -142,6 +144,9 @@ spec:
         - name: envshare
           mountPath: /env
           readOnly: true
+        - name: flags
+          mountPath: /flags
+          readOnly: true
       - name: proxy
         image: alpine/socat:1.0.3
         command: [ "sh", "-c", "source /env/swarm.env; exec socat tcp-listen:30399,reuseaddr,fork tcp:localhost:$NODEPORT"]
@@ -163,6 +168,9 @@ spec:
           - --reporter.grpc.retry.max=10
       {{- end }}
       volumes:
+      - name: flags
+        configMap:
+          name: {{ template "swarm.fullname" . }}-podflags
       - name: keys
         secret:
           secretName: {{ template "swarm.fullname" . }}
