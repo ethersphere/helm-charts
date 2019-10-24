@@ -16,6 +16,6 @@ dependencies:
   version: 3.8.3
 - name: jaeger
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
-  version: 0.0.7
-digest: sha256:9a2a9be919235bd21d787e8edcc82668eb42979ef7970ed7ccd2b42fd945bc3f
-generated: "2019-09-19T16:50:04.280581078+02:00"
+  version: 0.0.8
+digest: sha256:5e4563a4220e1db8c4593e2be70816d91576ca0a42e7f5895413cab34acfae76
+generated: "2019-10-24T11:21:13.599307677+02:00"

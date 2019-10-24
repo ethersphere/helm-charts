@@ -24,6 +24,6 @@ dependencies:
 
   # Tracing
   - name: "jaeger"
-    version: 0.0.7
+    version: 0.0.8
     condition: swarm.tracingEnabled
     repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
