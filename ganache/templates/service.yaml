@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "ganache.fullname" . }}
+  labels:
+    app: {{ template "ganache.name" . }}
+    chart: {{ template "ganache.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    app: {{ template "ganache.name" . }}
+    release: {{ .Release.Name }}
+  clusterIP: None
+  ports:
+  - name: rpc
+    port: 8545

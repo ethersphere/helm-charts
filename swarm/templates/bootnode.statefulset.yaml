@@ -1,3 +1,4 @@
+{{- if .Values.bootnode.enabled -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -115,4 +116,6 @@ spec:
       storageClassName: "{{ .Values.bootnode.persistence.storageClass }}"
     {{- end }}
   {{- end }}
+{{- end }}
+
 {{- end }}
