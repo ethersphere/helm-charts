@@ -342,7 +342,7 @@ influxdb:
   ## ref: https://docs.influxdata.com/influxdb/v1.1/administration/config/
   config:
     reporting_disabled: false
-    
+
     storage_directory: /var/lib/influxdb
     rpc:
       enabled: true
@@ -887,6 +887,10 @@ grafana:
     default:
       smoke:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke.json
+      smoke-sliding:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-sliding.json
+      smoke-pss:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-pss.json
       ldbstore:
         url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/ldbstore.json
       swarm:
