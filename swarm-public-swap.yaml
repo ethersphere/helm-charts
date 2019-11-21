@@ -1,0 +1,299 @@
+bootnode:
+  enabled: true
+  image:
+    repository: ethersphere/swarm
+    tag: latest
+  terminationGracePeriodSeconds: 3
+  updateStrategy:
+    type: "OnDelete"
+  config:
+    extraFlags:
+      - --bzzkeyhex=1c6f5f57065cdebaf66c34550185d025b6d083983ffa8b178e552602a2f5656b"
+      - --swap
+      - --swap-backend-url=https://ropsten.infura.io/v3/4f7e7287d52447ab8865dbdcf7c203e1
+      - --swap-initial-deposit=99999999
+      - --ws
+      - --ens-api=test:112234455c3a32fd11230c42e7bccd4a84e02010@http://ropsten-geth-geth.geth:8545
+      - --wsaddr=0.0.0.0
+      - --wsorigins=*
+      - --wsapi=admin,net,debug,bzz,stream,accounting,swap
+      - --store.cache.size=10000
+      - --vmodule=swarm/swap/*=5
+  persistence:
+    enabled: true
+    storageClass: "gp2-delete"
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: null
+    limits:
+      memory: 1524Mi
+      cpu: null
+
+swarm:
+  image:
+    repository: ethersphere/swarm
+    tag: edge 
+  metricsEnabled: true
+  tracingEnabled: true
+  profilingEnabled: true
+  ganacheEnabled: false 
+  terminationGracePeriodSeconds: 3
+  imagePullPolicy: Always
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: "OnDelete"
+  config:
+    ens_api: "314159265dD8dbb310642f98f50C066173C1259b@https://cloudflare-eth.com"
+    verbosity: 5
+    debug: true
+    maxpeers: 50
+    bzznetworkid: 5  # Only network ID 5 is supported with SWAP code
+    storesize: "500000" # 500000 * 4KB = 2GB
+    extraFlags:
+      - --swap
+      - --swap-backend-url=https://ropsten.infura.io/v3/4f7e7287d52447ab8865dbdcf7c203e1
+      - --swap-initial-deposit=99999999
+      - --ws
+      - --ens-api=test:112234455c3a32fd11230c42e7bccd4a84e02010@http://ropsten-geth-geth.geth:8545
+      - --wsaddr=0.0.0.0
+      - --wsorigins=*
+      - --wsapi=admin,net,debug,bzz,stream,accounting,swap
+      - --store.cache.size=10000
+      - --vmodule=swarm/swap/*=5
+    podSpecificFlags:
+      swarm-1: "--bzzkeyhex=f4d9333a6c2caaffe215869b9cdcfca1bf6bfe197ec46c15e1a97b809e576ce3"
+      swarm-2: "--bzzkeyhex=fbe066ddf818f9e91459cd5cdd96cdbaf39f59fd14215386842e390c3fd978d8"
+      swarm-3: "--bzzkeyhex=c53e287bbc248a0ef2a5c00df76524d667b150bee4dfbdac3496caac52db73d6"
+      swarm-4: "--bzzkeyhex=cbaca6bf89618979ccf528a0df84ba14dc6754c15cbe3b57fb742bfae7c837b1"
+      swarm-5: "--bzzkeyhex=143b74c9bd60682c4fd94075067b27e1c883f5794aa8f313e3394fff836cd19e"
+      swarm-6: "--bzzkeyhex=b09301115b88c926115bc1c1c376be2f850d6e19f69aad8623b141f17c08ff6f"
+      swarm-7: "--bzzkeyhex=5d9b5b4d36e2d504c325a8659892d834484df2b613aa5b7fd8f994dc3a121966"
+      swarm-8: "--bzzkeyhex=9a0929624ff3ec024f6fa11d7b6b99887a3b32a2144dbe4d81ab0e5a606f2338"
+      swarm-9: "--bzzkeyhex=452da177b7fe9f38ab1ec34e2d758b25fffa5f904c426eed225ccf45ec0edca9"
+      swarm-10: "--bzzkeyhex=ef7e0d79e86796b95028fb4d22644c36a9683bbca4f2fb45408d2e638f77067d"
+      swarm-11: "--bzzkeyhex=eecc1e5c4549b261ee57c11f9c81f715d3e3479a882aeee257c36b04a6fdb807"
+      swarm-12: "--bzzkeyhex=788cdac5bd08c3534c7ebef7b378ced09a70b671ce9624a8a7e826aa66f88ccd"
+      swarm-13: "--bzzkeyhex=e65f88bced41cf9f59b7b770168d1c933d8e784e0d69f126b1dbb010f09d4fd4"
+      swarm-14: "--bzzkeyhex=2bd84114d6100accb9fb1ee3c25e7ad412a7d334938528bb9d5e42cd6c5f22ad"
+      swarm-15: "--bzzkeyhex=50dd53bf2049d17b9f145414f0e5f2bbb9903cfd2f9976f2e1c1b86bc2c95d1a"
+      swarm-16: "--bzzkeyhex=ad58839a94d669a0a7801fb403b00ce22929ea6f89efc8a2afa25ab0f7922319"
+      swarm-17: "--bzzkeyhex=de467355c49aedb36b2348e9ee17918e1582e29d9f07b032ba43b70390d3c83d"
+      swarm-18: "--bzzkeyhex=b7aea178eb8f9b2d0b3e127de7eeea7746306379192ff0dd0ec3240755ae7fba"
+      swarm-19: "--bzzkeyhex=26c286a73849cc60bb03aa53895d36d819b1f762c5f74534fb132cefcaef484f"
+      swarm-20: "--bzzkeyhex=1562149a7080bf81650b66bcfd5a4cf88bd1d7f1bdcdafc99d4fb4a921981d55"
+      swarm-21: "--bzzkeyhex=9c2dc210d5cbbf42e03895f4dfbf649480e6a68e31da0ee29e8dd5cca981be3a"
+      swarm-22: "--bzzkeyhex=e8e7deac8c92ba60dfe243ae2db9ac2e5333897cd36409aec9371c9f11221ae5"
+      swarm-23: "--bzzkeyhex=7bc29cda4a72d7845ad25eefd4a1e159be2436cc444bee349b89a431835192c9"
+      swarm-24: "--bzzkeyhex=7699fe2cecb327e6e5fa20797a939bec4eee8f059699609fa23524d94d338923"
+      swarm-25: "--bzzkeyhex=775ded399e65bb0a0117090955aecc2c11fa0c4fdc4c293ad85b390bd3365131"
+      swarm-26: "--bzzkeyhex=de2906226e5075a3c4f680a029694175b64829fe13df79f521c253edfdc9e5fc"
+      swarm-27: "--bzzkeyhex=8b00bcca1ff00e9f28bfc8627d1f125494dd985d2d0eee19413aa9631d489ec2"
+      swarm-28: "--bzzkeyhex=9dba564ed2800154df7ca067809f9de88073ea957549721acbc026d37b573ea7"
+      swarm-29: "--bzzkeyhex=ca9262894cc5b329510182f76833038f02452922a9644a77d3ba601d7ed0ca80"
+  secrets:
+    password: qwerty
+  ingress:
+    domain: stg.swarm-gateways.net
+    enabled: true
+    tls:
+      enabled: true
+      acmeEnabled: false
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 500m
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  persistence:
+    enabled: true
+    storageClass: "gp2-delete"
+    accessMode: ReadWriteOnce
+    size: 5Gi
+  resources:
+    requests:
+      memory: 412Mi
+      cpu: null
+    limits:
+      memory: 1224Mi
+      cpu: null
+  tracingAgent:
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: null
+      limits:
+        memory: 64Mi
+        cpu: null
+
+influxdb:
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: null
+    limits:
+      memory: 8Gi
+      cpu: null
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 30Gi
+  config:
+    meta:
+      logging_enabled: true
+    data:
+      trace_logging_enabled: true
+
+grafana:
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: metrics
+        type: influxdb
+        url: http://swarm-influxdb:8086
+        database: metrics
+        user: swarm
+        password: swarm
+        access: proxy
+        isDefault: true
+  dashboards:
+    default:
+      smoke:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke.json
+      ldbstore:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/ldbstore.json
+      swarm:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/swarm.json
+      upload-speed:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/upload-speed.json
+      sliding:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/smoke-sliding.json
+      kad:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/kad.json
+      fetchers:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/fetchers.json
+      timeouts:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/timeouts.json
+      p2p:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/p2p.json
+      pushsync:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/pushsync.json
+      runtime:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/runtime.json
+      pss:
+        url: https://raw.githubusercontent.com/ethersphere/grafana-dashboards/master/pss.json
+
+jaeger:
+  resources:
+    requests:
+      memory: 2000Mi
+      cpu: null
+    limits:
+      memory: 5000Mi
+      cpu: null
+  config:
+    env:
+      SPAN_STORAGE_TYPE: memory
+    args:
+      - "--memory.max-traces=300000"
+
+        
+        
+ #ganache:
+ #  enabled: true
+ #  config:
+ #    # Start the blockchain with some pre-defined accounts that have some ETH.
+ #    # Note: 100000000000000000000 wei == 100 ETH
+ #    accounts:
+ #      - addr: "0xcD604B06F0A015269b34c2a8DC8C779535c24B2f"
+ #        privKey: "0xee57faecd3507232bf794e4c3689e9329d89d5720fb979a07910e426b0da6ca2"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xc029885FCeedD27623f3293cD892460B528e33E2"
+ #        privKey: "0x0eb6d5457d6a01699c577df6567f63dcad0fdbacc52c3fe85e8dfce86f2a204a"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xDCD36E29Ed55a66F6A3dB114dFcDe7ef1Fb4b346"
+ #        privKey: "0xa15672ac5fa96bf19f15613d60b4a4982ed97cf1a736dc71557b64e7b9363bbc"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x894A9BfAf6dFe917F0F61bbDcC3096Cd5eA77F2A"
+ #        privKey: "0x976aa1879c686733d07e9201d3a62ad95dcf78b1e438f2b74939bf7a7cd432f9"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x666f30fD950Cc8A8Db93f9C7d86Bb0B14cb1773A"
+ #        privKey: "0x3f389096dc9ddd64066e0336c5da827101daa03e2ecf5873de464be3e69327f5"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xCD51767481E08aa21eF38Ff346726b61521A3D37"
+ #        privKey: "0x03e926dcc0739df9df1a34844c0c1e6b88f65384cc5903fca9b5d3832f4f6efd"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x04d27755ad92A075588470604b44a6b96082b5f1"
+ #        privKey: "0x7b5dee226e32c465d950e23474d19840f8f7c7663807571b98c2a9b6d4a6df3f"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xb283b0306Ff8dFeDe969e338a9de31347e100D0c"
+ #        privKey: "0xa37da95055d5edaf02feb2844ee82df13f28a6c2cbc9a2b26ceae8ff04623c15"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x9488Cd254fD03334FD553579862BA6653f521c17"
+ #        privKey: "0x64b88c789d476ace4ab87e90edf197db001e74195b39cab083635fcd6d8a9ce7"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xC454316cF0475e9d1c283D02d32fBbf6700e4789"
+ #        privKey: "0xad4c9d3df6dd9d78b733f386d8780158dcbdcdce496a4cfd78eeafed9c49fb19"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xb1C90c0Ab39264DF89888d43Fa896369Aac2d298"
+ #        privKey: "0xee8c2b5d0267782b5cbf1ba2f42d78151e020d13fbe3444b1d644003fa86d8c6"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x424E5C164B7EF4c89eD620c31EC4Db317020526F"
+ #        privKey: "0xbd0f7e35740932ce5358f899870639b1d8c1277005bef28cda00d41b53d1dfa5"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x08A43Cdd350bd0e28c46ECe47A99756a23c11feB"
+ #        privKey: "0x2a47ae058279225833903d7f7c6fa9eb3bb6fba85b1e3912fdb068f997ad5107"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x9a149C54247Db4dBAEF2e0E709a85aA40Eb7432E"
+ #        privKey: "0xf609e16cde4feed97e0978e964442e42c0f923bf8a49217fa3fd20add4710024"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xc131A74a139B87dC6774A0e703322D473F4b08a8"
+ #        privKey: "0xcc3c4043e6d418494623f3523fdda356045b73978fb30386c04d7b4b7b158812"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x25C4c39873b56A388A8f726455FAcFa6bC287C3f"
+ #        privKey: "0x1c1cf379ac14ed85eebfee401d989eaedc2cb75fcfdaff36a6e0493539e5428e"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xB2C1fcfD71BF1ba4A24d2A6feB830908FC24127E"
+ #        privKey: "0x34a1dd5f173219e85ce5fcf7218ef6d388b60cbebf1ffdb2a3aa31f110d25514"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x624Cf878EA19ECA7B0E1c45a90Ab0a4508340aBA"
+ #        privKey: "0xb7f6a117c8301e7f0645bb152e35ae88ce40b2831cd0fee88218906387844bad"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xA14Cd0A1c6b5702D1d37079c28A0A02304361a08"
+ #        privKey: "0xdb8f72350c520b87a2a5f32cf1863f2f08ef6854ec2eb4f177c6fe6af268beea"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xBCd021809A0407AD2f7b606e7B44470215183a71"
+ #        privKey: "0xc1d1ddb09d771f27921659c61158e82d47f869da44fcc7b349ed4efe91aef90f"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x69070058712F7A5Fe99eBcD20F1467E06da67fE5"
+ #        privKey: "0x7f6834eb6b50ffbfe4a5a88e6cf1190b98d11877093ce29fb62f65485b957f5d"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x689830423E4F64Dc85fCb7b6b5AE2d8D9c0A1136"
+ #        privKey: "0xd468a4bfd75c64b5cdabb9ed8667fb307258bd5b383a2c53cf121297010d55c7"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x9E676B260EAa6F2Ac4376F60f2fAd43C8eB0A63C"
+ #        privKey: "0xc4906bb5678d3bd79acb2badb84d05469eb1c16e3e27a891e08b23d2c8552211"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x1e8EDA25FCd3BA0C24aC9C7Fe31Cd0A0caD017D4"
+ #        privKey: "0x6ddf42c395a2a50e76032d51ee4a6cef6c3df206a7ea64724c0a6bf3c8c12198"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xb00047e59907391340ebB68b95091aced384F3Ce"
+ #        privKey: "0x1a9d2dbefe2266c66ca4c95358ce144cf03b3bf251b19ca04aed95848a0c9c62"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xf552A0128e0CAaff7D5c339fb16C24536C76ebDC"
+ #        privKey: "0xcbda625713f26f7c595cf46e997c548788098ef7c8b1df7b24a3d76d218d5211"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x742BFcffD24F57a3DAf4b45B504f62D3708290cD"
+ #        privKey: "0x05bc3d6d980b0ebf952c61babe49a1a24090c0b8020452407e52b4f39ec03407"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x08DEe5038DBf0089330ae04450449fC7B94bdcDe"
+ #        privKey: "0x2bcf8f703504ec90c705ad51d2b0b670e0ceeb3307b4facf9edf83bf47033f8c"
+ #        wei: "100000000000000000000"
+ #      - addr: "0xb1473a3B0033c9Df9aacF209Ba080516c40c5038"
+ #        privKey: "0x2bdd4784da6c5c34772a42c7fd9b1643e6f772c581e2506866b3ff69484efc3e"
+ #        wei: "100000000000000000000"
+ #      - addr: "0x025F940638f81abF4c9eEb25aee517cbf38E6E32"
+ #        privKey: "0xeaf4a3b94e811cf71ce6dcd996fb936b59e22a869e7be25b6e61c2e1ecd481f4"
+ #        wei: "100000000000000000000"

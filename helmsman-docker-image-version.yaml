@@ -1,0 +1,15 @@
+swarm:
+  image:
+    repository: ethersphere/swarm
+    tag: edge@sha256:e92e94c527d0f0438cc9c2852228021e0e80e3db5db6b05d13b1133ae9d1ec1a
+
+bootnode:
+  image:
+    repository: ethersphere/swarm
+    tag: edge@sha256:e92e94c527d0f0438cc9c2852228021e0e80e3db5db6b05d13b1133ae9d1ec1a
+
+
+smoke:
+  image:
+    repository: ethersphere/swarm
+    tag: edge-alltools@sha256:c53da30fc201435e47ee0f1b1d253d76b7d2f7c0d8c7998154846e2328625f36

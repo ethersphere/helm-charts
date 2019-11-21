@@ -1,0 +1,51 @@
+settings:
+  # Name of the service account within each namespace that should be used for tiller
+  serviceAccount: "tiller"
+
+namespaces:
+  kube-system:
+  swap-staging:
+    protected: false
+    installTiller: false
+    useTiller: true
+
+helmRepos:
+  stable: "https://kubernetes-charts.storage.googleapis.com"
+  incubator: "http://storage.googleapis.com/kubernetes-charts-incubator"
+  ethersphere: "https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/"
+
+apps:
+  # Swarm
+  private-swarm:
+    tillerNamespace: "swap-staging"
+    namespace: "swap-staging"
+    name: "swarm-private"
+    enabled: true
+    purge: true
+    chart: "ethersphere/swarm-private"
+    version: "0.0.5"
+    description: "(Private) Swarm cluster"
+    valuesFiles:
+      - "swarm-private-swap.yaml"
+      - "version.yaml"
+    set:
+      swarm.replicaCount: "$SWARM_PRIVATE_REPLICAS"
+    wait: true
+    timeout: 180
+
+  # Smoke test
+  private-smoke-a:
+    tillerNamespace: "swap-staging"
+    namespace: "swap-staging"
+    name: "private-smoke-a"
+    enabled: false 
+    purge: true
+    chart: "ethersphere/smoke"
+    version: "0.0.2"
+    description: "(Private) Smoke test: Upload and sync"
+    valuesFiles:
+      #- "values/private-smoke-a.yaml"
+      #- "values/version.yaml"
+    set:
+      smoke.config.swarmReplicas: "$SWARM_PRIVATE_REPLICAS"
+    wait: false
