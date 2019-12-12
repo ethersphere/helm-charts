@@ -1,44 +1,10 @@
-bootnode:
-  enabled: true
-  image:
-    repository: ethersphere/swarm
-    tag: latest
-  terminationGracePeriodSeconds: 3
-  updateStrategy:
-    type: "OnDelete"
-  config:
-    extraFlags:
-      - --bzzkeyhex=1c6f5f57065cdebaf66c34550185d025b6d083983ffa8b178e552602a2f5656b"
-      - --swap
-      - --swap-backend-url=https://ropsten.infura.io/v3/4f7e7287d52447ab8865dbdcf7c203e1
-      - --swap-initial-deposit=99999999
-      - --ws
-      - --ens-api=test:112234455c3a32fd11230c42e7bccd4a84e02010@http://ropsten-geth-geth.geth:8545
-      - --wsaddr=0.0.0.0
-      - --wsorigins=*
-      - --wsapi=admin,net,debug,bzz,stream,accounting,swap
-      - --store.cache.size=10000
-      - --vmodule=swarm/swap/*=5
-  persistence:
-    enabled: true
-    storageClass: "gp2-delete"
-    accessMode: ReadWriteOnce
-    size: 1Gi
-  resources:
-    requests:
-      memory: 512Mi
-      cpu: null
-    limits:
-      memory: 1524Mi
-      cpu: null
-
 swarm:
   image:
     repository: ethersphere/swarm
     tag: edge 
   metricsEnabled: true
-  tracingEnabled: true
-  profilingEnabled: true
+  tracingEnabled: false 
+  profilingEnabled: false 
   ganacheEnabled: false 
   terminationGracePeriodSeconds: 3
   imagePullPolicy: Always
@@ -55,15 +21,17 @@ swarm:
     extraFlags:
       - --swap
       - --swap-backend-url=https://ropsten.infura.io/v3/4f7e7287d52447ab8865dbdcf7c203e1
-      - --swap-initial-deposit=99999999
-      - --ws
+      - --swap-skip-deposit
       - --ens-api=test:112234455c3a32fd11230c42e7bccd4a84e02010@http://ropsten-geth-geth.geth:8545
+      - --ws
       - --wsaddr=0.0.0.0
       - --wsorigins=*
       - --wsapi=admin,net,debug,bzz,stream,accounting,swap
       - --store.cache.size=10000
       - --vmodule=swarm/swap/*=5
+      - --bootnodes "enode://7f4d606c91d50d91fd09cb44f8b3d8033f1ca87e977a881e91d77ff6af98b6a52245ba9aeba13a39024ae8bdf3afa421fd018571ae37928c065d7a62503f17a6@3.122.203.99:40301,enode://3d58e0cf0a057e71388dd15719cb8f7c94f732dd4f3e5f7a6e3f2185db68ed10ac352080b81811d17bf3f65873d9e8b2b4f30320549b162b596dbce904700e8a@52.35.212.179:40301" 
     podSpecificFlags:
+      swarm-0: "--bzzkeyhex=1c6f5f57065cdebaf66c34550185d025b6d083983ffa8b178e552602a2f5656b"
       swarm-1: "--bzzkeyhex=f4d9333a6c2caaffe215869b9cdcfca1bf6bfe197ec46c15e1a97b809e576ce3"
       swarm-2: "--bzzkeyhex=fbe066ddf818f9e91459cd5cdd96cdbaf39f59fd14215386842e390c3fd978d8"
       swarm-3: "--bzzkeyhex=c53e287bbc248a0ef2a5c00df76524d667b150bee4dfbdac3496caac52db73d6"

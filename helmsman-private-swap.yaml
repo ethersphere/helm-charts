@@ -4,10 +4,10 @@ settings:
 
 namespaces:
   kube-system:
-  swap-staging:
+  swap-testing:
     protected: false
-    installTiller: false
-    useTiller: true
+    installTiller: false 
+    useTiller: true 
 
 helmRepos:
   stable: "https://kubernetes-charts.storage.googleapis.com"
@@ -17,8 +17,8 @@ helmRepos:
 apps:
   # Swarm
   private-swarm:
-    tillerNamespace: "swap-staging"
-    namespace: "swap-staging"
+    tillerNamespace: "swap-testing"
+    namespace: "swap-testing"
     name: "swarm-private"
     enabled: true
     purge: true
@@ -27,25 +27,26 @@ apps:
     description: "(Private) Swarm cluster"
     valuesFiles:
       - "swarm-private-swap.yaml"
-      - "version.yaml"
+        # - "version.yaml"
     set:
-      swarm.replicaCount: "$SWARM_PRIVATE_REPLICAS"
+      #swarm.replicaCount: "$SWARM_PRIVATE_REPLICAS"
+      swarm.replicaCount: "3"
     wait: true
     timeout: 180
 
   # Smoke test
-  private-smoke-a:
-    tillerNamespace: "swap-staging"
-    namespace: "swap-staging"
-    name: "private-smoke-a"
-    enabled: false 
-    purge: true
-    chart: "ethersphere/smoke"
-    version: "0.0.2"
-    description: "(Private) Smoke test: Upload and sync"
-    valuesFiles:
-      #- "values/private-smoke-a.yaml"
-      #- "values/version.yaml"
-    set:
-      smoke.config.swarmReplicas: "$SWARM_PRIVATE_REPLICAS"
-    wait: false
+  #  private-smoke-a:
+  #    tillerNamespace: "swap-testing"
+  #    namespace: "swap-testing"
+  #    name: "private-smoke-a"
+  #    enabled: true 
+  #    purge: true
+  #    chart: "ethersphere/smoke"
+  #    version: "0.0.2"
+  #    description: "(Private) Smoke test: Upload and sync"
+  #    valuesFiles:
+  #      - "private-smoke-a.yaml"
+  #      #- "values/version.yaml"
+  #    set:
+  #      smoke.config.swarmReplicas: "$SWARM_PRIVATE_REPLICAS"
+  #    wait: false

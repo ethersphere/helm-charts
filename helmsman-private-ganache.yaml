@@ -1,0 +1,32 @@
+settings:
+  # Name of the service account within each namespace that should be used for tiller
+  serviceAccount: "tiller"
+
+namespaces:
+  kube-system:
+  ganache:
+    protected: false
+    installTiller: false 
+    useTiller: true
+
+helmRepos:
+  stable: "https://kubernetes-charts.storage.googleapis.com"
+  incubator: "http://storage.googleapis.com/kubernetes-charts-incubator"
+  ethersphere: "https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/"
+
+apps:
+  # Swarm
+  ganache:
+    tillerNamespace: "ganache"
+    namespace: "ganache"
+    name: "ganache"
+    enabled: true
+    purge: true
+    chart: "ethersphere/ganache"
+    version: "0.0.1"
+    description: "Ganache blockchain for swap testing"
+    valuesFiles:
+      - "ganache.yaml"
+        # - "version.yaml"
+    wait: true
+    timeout: 180

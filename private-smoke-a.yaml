@@ -1,0 +1,18 @@
+smoke:
+  imagePullPolicy: Always
+  schedule: "*/4 * * * *"
+  successfulJobsHistoryLimit: 60
+  config:
+    name: "upload-sync-a"
+    prefix: "swarm-private"
+    suffix: "swarm-private-headless"
+    operation: "upload_and_sync"
+    influxdbEndpoint: "http://swarm-private-influxdb:8086"
+    extraFlags:
+      - --filesize=10000 #KB
+      - --timeout=1500
+      - --sync-delay
+      - --debug
+      - --sync-mode=pullsync
+      - --http-port=8500
+      - --verbosity=4

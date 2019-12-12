@@ -1,13 +1,4 @@
 bootnode:
-  nodeSelector:
-    nospot: "true"
-  tolerations:
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoSchedule"
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoExecute"
   terminationGracePeriodSeconds: 3
   updateStrategy:
     type: "OnDelete"
@@ -31,19 +22,13 @@ bootnode:
       cpu: null
 
 swarm:
-  nodeSelector:
-    nospot: "true"
-  tolerations:
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoSchedule"
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoExecute"
+  image:
+    repository: ethersphere/swarm
+    tag: edge 
   metricsEnabled: true
   tracingEnabled: true
   profilingEnabled: true
-  ganacheEnabled: true
+  ganacheEnabled: false 
   terminationGracePeriodSeconds: 3
   imagePullPolicy: Always
   podManagementPolicy: Parallel
@@ -58,8 +43,9 @@ swarm:
     storesize: "500000" # 500000 * 4KB = 2GB
     extraFlags:
       - --swap
-      - --swap-backend-url=http://swarm-private-ganache:8545
-      - --swap-initial-deposit=99999999
+      - --swap-backend-url=http://ganache.ganache.svc.cluster.local:8545
+      - --swap-deposit-amount=99999999
+      - --swap-chequebook-factory=0x070055a77771f0e6741dfc6af6949a398bb3b05c
       - --ws
       - --ens-api=test:112234455c3a32fd11230c42e7bccd4a84e02010@http://ropsten-geth-geth.geth:8545
       - --wsaddr=0.0.0.0
@@ -133,15 +119,6 @@ swarm:
         cpu: null
 
 influxdb:
-  nodeSelector:
-    nospot: "true"
-  tolerations:
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoSchedule"
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoExecute"
   resources:
     requests:
       memory: 256Mi
@@ -160,15 +137,6 @@ influxdb:
       trace_logging_enabled: true
 
 grafana:
-  nodeSelector:
-    nospot: "true"
-  tolerations:
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoSchedule"
-    - key: "nospot"
-      operator: "Exists"
-      effect: "NoExecute"
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -221,102 +189,3 @@ jaeger:
       SPAN_STORAGE_TYPE: memory
     args:
       - "--memory.max-traces=300000"
-
-
-
-ganache:
-  enable: true
-  config:
-    # Start the blockchain with some pre-defined accounts that have some ETH.
-    # Note: 100000000000000000000 wei == 100 ETH
-    accounts:
-      - addr: "0xcD604B06F0A015269b34c2a8DC8C779535c24B2f"
-        privKey: "0xee57faecd3507232bf794e4c3689e9329d89d5720fb979a07910e426b0da6ca2"
-        wei: "100000000000000000000"
-      - addr: "0xc029885FCeedD27623f3293cD892460B528e33E2"
-        privKey: "0x0eb6d5457d6a01699c577df6567f63dcad0fdbacc52c3fe85e8dfce86f2a204a"
-        wei: "100000000000000000000"
-      - addr: "0xDCD36E29Ed55a66F6A3dB114dFcDe7ef1Fb4b346"
-        privKey: "0xa15672ac5fa96bf19f15613d60b4a4982ed97cf1a736dc71557b64e7b9363bbc"
-        wei: "100000000000000000000"
-      - addr: "0x894A9BfAf6dFe917F0F61bbDcC3096Cd5eA77F2A"
-        privKey: "0x976aa1879c686733d07e9201d3a62ad95dcf78b1e438f2b74939bf7a7cd432f9"
-        wei: "100000000000000000000"
-      - addr: "0x666f30fD950Cc8A8Db93f9C7d86Bb0B14cb1773A"
-        privKey: "0x3f389096dc9ddd64066e0336c5da827101daa03e2ecf5873de464be3e69327f5"
-        wei: "100000000000000000000"
-      - addr: "0xCD51767481E08aa21eF38Ff346726b61521A3D37"
-        privKey: "0x03e926dcc0739df9df1a34844c0c1e6b88f65384cc5903fca9b5d3832f4f6efd"
-        wei: "100000000000000000000"
-      - addr: "0x04d27755ad92A075588470604b44a6b96082b5f1"
-        privKey: "0x7b5dee226e32c465d950e23474d19840f8f7c7663807571b98c2a9b6d4a6df3f"
-        wei: "100000000000000000000"
-      - addr: "0xb283b0306Ff8dFeDe969e338a9de31347e100D0c"
-        privKey: "0xa37da95055d5edaf02feb2844ee82df13f28a6c2cbc9a2b26ceae8ff04623c15"
-        wei: "100000000000000000000"
-      - addr: "0x9488Cd254fD03334FD553579862BA6653f521c17"
-        privKey: "0x64b88c789d476ace4ab87e90edf197db001e74195b39cab083635fcd6d8a9ce7"
-        wei: "100000000000000000000"
-      - addr: "0xC454316cF0475e9d1c283D02d32fBbf6700e4789"
-        privKey: "0xad4c9d3df6dd9d78b733f386d8780158dcbdcdce496a4cfd78eeafed9c49fb19"
-        wei: "100000000000000000000"
-      - addr: "0xb1C90c0Ab39264DF89888d43Fa896369Aac2d298"
-        privKey: "0xee8c2b5d0267782b5cbf1ba2f42d78151e020d13fbe3444b1d644003fa86d8c6"
-        wei: "100000000000000000000"
-      - addr: "0x424E5C164B7EF4c89eD620c31EC4Db317020526F"
-        privKey: "0xbd0f7e35740932ce5358f899870639b1d8c1277005bef28cda00d41b53d1dfa5"
-        wei: "100000000000000000000"
-      - addr: "0x08A43Cdd350bd0e28c46ECe47A99756a23c11feB"
-        privKey: "0x2a47ae058279225833903d7f7c6fa9eb3bb6fba85b1e3912fdb068f997ad5107"
-        wei: "100000000000000000000"
-      - addr: "0x9a149C54247Db4dBAEF2e0E709a85aA40Eb7432E"
-        privKey: "0xf609e16cde4feed97e0978e964442e42c0f923bf8a49217fa3fd20add4710024"
-        wei: "100000000000000000000"
-      - addr: "0xc131A74a139B87dC6774A0e703322D473F4b08a8"
-        privKey: "0xcc3c4043e6d418494623f3523fdda356045b73978fb30386c04d7b4b7b158812"
-        wei: "100000000000000000000"
-      - addr: "0x25C4c39873b56A388A8f726455FAcFa6bC287C3f"
-        privKey: "0x1c1cf379ac14ed85eebfee401d989eaedc2cb75fcfdaff36a6e0493539e5428e"
-        wei: "100000000000000000000"
-      - addr: "0xB2C1fcfD71BF1ba4A24d2A6feB830908FC24127E"
-        privKey: "0x34a1dd5f173219e85ce5fcf7218ef6d388b60cbebf1ffdb2a3aa31f110d25514"
-        wei: "100000000000000000000"
-      - addr: "0x624Cf878EA19ECA7B0E1c45a90Ab0a4508340aBA"
-        privKey: "0xb7f6a117c8301e7f0645bb152e35ae88ce40b2831cd0fee88218906387844bad"
-        wei: "100000000000000000000"
-      - addr: "0xA14Cd0A1c6b5702D1d37079c28A0A02304361a08"
-        privKey: "0xdb8f72350c520b87a2a5f32cf1863f2f08ef6854ec2eb4f177c6fe6af268beea"
-        wei: "100000000000000000000"
-      - addr: "0xBCd021809A0407AD2f7b606e7B44470215183a71"
-        privKey: "0xc1d1ddb09d771f27921659c61158e82d47f869da44fcc7b349ed4efe91aef90f"
-        wei: "100000000000000000000"
-      - addr: "0x69070058712F7A5Fe99eBcD20F1467E06da67fE5"
-        privKey: "0x7f6834eb6b50ffbfe4a5a88e6cf1190b98d11877093ce29fb62f65485b957f5d"
-        wei: "100000000000000000000"
-      - addr: "0x689830423E4F64Dc85fCb7b6b5AE2d8D9c0A1136"
-        privKey: "0xd468a4bfd75c64b5cdabb9ed8667fb307258bd5b383a2c53cf121297010d55c7"
-        wei: "100000000000000000000"
-      - addr: "0x9E676B260EAa6F2Ac4376F60f2fAd43C8eB0A63C"
-        privKey: "0xc4906bb5678d3bd79acb2badb84d05469eb1c16e3e27a891e08b23d2c8552211"
-        wei: "100000000000000000000"
-      - addr: "0x1e8EDA25FCd3BA0C24aC9C7Fe31Cd0A0caD017D4"
-        privKey: "0x6ddf42c395a2a50e76032d51ee4a6cef6c3df206a7ea64724c0a6bf3c8c12198"
-        wei: "100000000000000000000"
-      - addr: "0xb00047e59907391340ebB68b95091aced384F3Ce"
-        privKey: "0x1a9d2dbefe2266c66ca4c95358ce144cf03b3bf251b19ca04aed95848a0c9c62"
-        wei: "100000000000000000000"
-      - addr: "0xf552A0128e0CAaff7D5c339fb16C24536C76ebDC"
-        privKey: "0xcbda625713f26f7c595cf46e997c548788098ef7c8b1df7b24a3d76d218d5211"
-        wei: "100000000000000000000"
-      - addr: "0x742BFcffD24F57a3DAf4b45B504f62D3708290cD"
-        privKey: "0x05bc3d6d980b0ebf952c61babe49a1a24090c0b8020452407e52b4f39ec03407"
-        wei: "100000000000000000000"
-      - addr: "0x08DEe5038DBf0089330ae04450449fC7B94bdcDe"
-        privKey: "0x2bcf8f703504ec90c705ad51d2b0b670e0ceeb3307b4facf9edf83bf47033f8c"
-        wei: "100000000000000000000"
-      - addr: "0xb1473a3B0033c9Df9aacF209Ba080516c40c5038"
-        privKey: "0x2bdd4784da6c5c34772a42c7fd9b1643e6f772c581e2506866b3ff69484efc3e"
-        wei: "100000000000000000000"
-      - addr: "0x025F940638f81abF4c9eEb25aee517cbf38E6E32"
-        privKey: "0xeaf4a3b94e811cf71ce6dcd996fb936b59e22a869e7be25b6e61c2e1ecd481f4"
-        wei: "100000000000000000000"
