@@ -46,13 +46,13 @@ spec:
             - start
             - --config=.bee.yaml
           ports:
-            - containerPort: 8080
+            - containerPort: {{ int (split ":" .Values.beeConfig.api_addr )._1 }}
               name: http
               protocol: TCP
-            - containerPort: 7070
+            - containerPort: {{ int (split ":" .Values.beeConfig.p2p_addr )._1 }}
               name: p2p
               protocol: TCP
-            - containerPort: 6060
+            - containerPort: {{ int (split ":" .Values.beeConfig.debug_api_addr )._1 }}
               name: debug
               protocol: TCP
           livenessProbe:
