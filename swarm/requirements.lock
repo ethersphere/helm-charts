@@ -1,12 +1,12 @@
 dependencies:
 - name: influxdb
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 1.3.2
+  version: 4.3.2
 - name: grafana
   repository: https://kubernetes-charts.storage.googleapis.com/
-  version: 3.8.3
+  version: 5.5.5
 - name: jaeger
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
   version: 0.0.8
-digest: sha256:f8acd46f8765e296ce113b659b155051bb03cc65bcaa2fe3831d5e4580f47201
-generated: "2019-10-24T11:35:17.375042061+02:00"
+digest: sha256:89659fce2f8dcf829d4b658876b15b8a5bbd45ad0ec73d0a83d415b0c23581d7
+generated: "2020-08-24T15:14:14.670631+02:00"
