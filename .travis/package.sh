@@ -8,6 +8,7 @@ if [ ! -d $ARTIFACTS_DIR ] ; then
 fi
 
 helm repo add ethersphere $CHART_REPO_URL
+helm repo add influxdata https://helm.influxdata.com/
 helm repo update
 
 # Package each chart
