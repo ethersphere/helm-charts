@@ -3,7 +3,7 @@ dependencies:
   - name: "influxdb"
     version: 4.8.2
     condition: swarm.metricsEnabled
-    repository: https://influxdata.github.io/helm-charts
+    repository: https://helm.influxdata.com/
   - name: "grafana"
     version: 5.5.5
     condition: swarm.metricsEnabled

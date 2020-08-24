@@ -3,7 +3,7 @@ dependencies:
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
   version: 0.0.1
 - name: influxdb
-  repository: https://influxdata.github.io/helm-charts
+  repository: https://helm.influxdata.com/
   version: 4.8.2
 - name: kapacitor
   repository: https://kubernetes-charts.storage.googleapis.com/
@@ -17,5 +17,5 @@ dependencies:
 - name: jaeger
   repository: https://raw.githubusercontent.com/ethersphere/helm-charts-artifacts/master/
   version: 0.0.8
-digest: sha256:6661e205ad8ab33819919075cc0de484b99c3edc049a2e5ee070b8649e7d7f86
-generated: "2020-08-24T17:15:45.396919732+02:00"
+digest: sha256:fc84441e8740c7759c4e38561623f9a9a724d8e7a1d96ba53d2e3b5d062f7b17
+generated: "2020-08-24T17:21:33.212541404+02:00"
